@@ -7,7 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        central: '#ffa91a',
+        central: '#984e1e',
+        'central-2': '#ffeccc',
+        // 'central-bg': '#ffa91a',
       },
     },
   },
