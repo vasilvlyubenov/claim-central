@@ -1,4 +1,8 @@
 @import url('../public/css/reset.css');
 @import url('../public//css//typography.css');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 

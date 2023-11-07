@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
 export const singUp = async (email: string, password: string) => {
@@ -13,6 +13,12 @@ export const singIn = async (email: string, password: string) => {
     const result = response.user;
 
     return result;
+};
+
+export const signOutUser = async () => {
+    const response = await signOut(auth);
+    
+    return response;
 };
 
 export const isLoggedIn = () => {
