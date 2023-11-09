@@ -1,4 +1,5 @@
 import { Fragment, useState } from 'react';
+import {Link} from 'react-router-dom';
 import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react';
 import {
   ArrowPathIcon,
@@ -54,9 +55,24 @@ export default function Example() {
           </button>
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <Popover className="relative">
+
+          <a href="#" className="text-sm font-semibold leading-6 text-central">
+            Dashboard
+          </a>
+          <a href="#" className="text-sm font-semibold leading-6 text-central">
+            New claim
+          </a>
+          <a href="#" className="text-sm font-semibold leading-6 text-central">
+            Register
+          </a>
+        <div className="hidden lg:flex lg:justify-end">
+          <Link to="/login" className="text-sm font-semibold leading-6 text-central">
+            Log in
+          </Link>
+        </div>
+        <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-central">
-              Product
+              User
               <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
             </Popover.Button>
 
@@ -69,7 +85,7 @@ export default function Example() {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+              <Popover.Panel className="absolute -right-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
                   {products.map((item) => (
                     <div
@@ -104,22 +120,8 @@ export default function Example() {
               </Popover.Panel>
             </Transition>
           </Popover>
-
-          <a href="#" className="text-sm font-semibold leading-6 text-central">
-            Features
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-central">
-            Marketplace
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-central">
-            Company
-          </a>
         </Popover.Group>
-        <div className="hidden pl-12 lg:flex lg:justify-end">
-          <a href="#" className="text-sm font-semibold leading-6 text-central">
-            Log in
-          </a>
-        </div>
+
       </nav>
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-10" />

@@ -1,28 +1,24 @@
-import { useEffect } from 'react';
-import Header from './components/core/Header';
-import Footer from './components/core/Footer';
+import { Routes, Route } from 'react-router-dom';
+// import { useEffect } from 'react';
 import './App.css';
-import * as userService from './services/userService';
+import Header from 'components/Header';
+import Footer from 'components/Footer';
+import Login from 'components/Login';
 
 function App() {
-  useEffect(() => {
-    const res = userService
-      .isLoggedIn();
 
-    console.log(res);
-
-
-    return () => {
-      res;
-    };
-  }, []);
   return (
     <>
-    <Header/>
-    <div className='content'>
-
-    </div>
-    <Footer />
+      <Header />
+      <div className='content'>
+          <Routes>
+            <Route path='/' />
+            <Route path='/login' element={<Login/>} />
+            <Route path='/register' />
+          </Routes>
+          
+      </div>
+      <Footer />
     </>
   );
 }
