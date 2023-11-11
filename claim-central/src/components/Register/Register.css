@@ -1,0 +1,16 @@
+.register input, .register select, .register option, .register textarea {
+    color: #000;
+}
+
+.register input:focus, .register select:focus, .register textarea:focus  {
+    outline: 2px solid #984e1e;
+}
+
+.register button {
+    background-color: #984e1e;
+    font-weight: 600;
+}
+
+.register button:active {
+    background-color: #83451b;
+}

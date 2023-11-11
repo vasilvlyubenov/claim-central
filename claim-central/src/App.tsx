@@ -1,9 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 // import { useEffect } from 'react';
 import './App.css';
-import Header from 'components/Header';
-import Footer from 'components/Footer';
-import Login from 'components/Login';
+import Header from 'components/Header/Header';
+import Footer from 'components/Footer/Footer';
+import Login from 'components/Login/Login';
+import Register from 'components/Register/Register';
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
           <Routes>
             <Route path='/' />
             <Route path='/login' element={<Login/>} />
-            <Route path='/register' />
+            <Route path='/register' element={<Register />} />
           </Routes>
           
       </div>

@@ -29,10 +29,10 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center login">
       <div className="w-full max-w-md p-4">
-        <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
+        <h2 className="text-2xl font-semibold text-center text-central mb-4">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-700 font-medium">
+            <label htmlFor="username" className="block font-medium">
               Username
             </label>
             <input
@@ -41,11 +41,11 @@ export default function Login() {
               name="username"
               value={formData.username}
               onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none"
+              className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700 font-medium">
+            <label htmlFor="password" className="block font-medium">
               Password
             </label>
             <input
@@ -54,7 +54,7 @@ export default function Login() {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none"
+              className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
           <div className="mb-4">

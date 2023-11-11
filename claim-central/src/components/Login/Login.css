@@ -1,0 +1,17 @@
+
+.login input {
+    color: #000;
+}
+
+.login input:focus {
+    outline:  1px solid #984e1e;
+}
+
+.login button {
+    background-color: #984e1e;
+    font-weight: 600;
+}
+
+.login button:active {
+    background-color: #83451b;
+}

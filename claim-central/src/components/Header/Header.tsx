@@ -56,15 +56,15 @@ export default function Example() {
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
 
-          <a href="#" className="text-sm font-semibold leading-6 text-central">
+          <a href="/dashboard" className="text-sm font-semibold leading-6 text-central">
             Dashboard
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-central">
+          <a href="/new-claim" className="text-sm font-semibold leading-6 text-central">
             New claim
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-central">
+          <Link to="/register" className="text-sm font-semibold leading-6 text-central">
             Register
-          </a>
+          </Link>
         <div className="hidden lg:flex lg:justify-end">
           <Link to="/login" className="text-sm font-semibold leading-6 text-central">
             Log in
@@ -187,12 +187,12 @@ export default function Example() {
                 </a>
               </div>
               <div className="py-6">
-                <a
-                  href="#"
+                <Link
+                  to="/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-central hover:bg-gray-50"
                 >
                   Log in
-                </a>
+                </Link>
               </div>
             </div>
           </div>
