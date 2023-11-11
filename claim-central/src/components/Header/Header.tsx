@@ -1,31 +1,18 @@
 import { Fragment, useState } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react';
 import {
-  ArrowPathIcon,
   Bars3Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
   XMarkIcon,
+  UserCircleIcon,
+  XCircleIcon
 } from '@heroicons/react/24/outline';
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
-const products = [
-
-
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
-  { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
-  { name: 'Security', description: 'Your customers’ data will be safe and secure', href: '#', icon: FingerPrintIcon },
-  { name: 'Integrations', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
-  { name: 'Automations', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
-];
-const callsToAction = [
-
-
-  { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
-  { name: 'Contact sales', href: '#', icon: PhoneIcon },
+const userLinks = [
+  { name: 'Profile', href: '/profile', icon: UserCircleIcon },
+  { name: 'Change Password', href: '/change-password', icon: XCircleIcon },
+  { name: 'Logout', href: '/logout', icon: XCircleIcon },
 ];
 
 function classNames(...classes: string[]) {
@@ -39,10 +26,10 @@ export default function Example() {
     <header className="bg-white">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8 " aria-label="Global">
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <Link to="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img className="h-8 w-auto" src="/src/assets/icon.png" alt="" />
-          </a>
+          </Link>
         </div>
         <div className="flex lg:hidden">
           <button
@@ -56,21 +43,21 @@ export default function Example() {
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
 
-          <a href="/dashboard" className="text-sm font-semibold leading-6 text-central">
+          <Link to="/dashboard" className="text-sm font-semibold leading-6 text-central">
             Dashboard
-          </a>
-          <a href="/new-claim" className="text-sm font-semibold leading-6 text-central">
+          </Link>
+          <Link to="/new-claim" className="text-sm font-semibold leading-6 text-central">
             New claim
-          </a>
+          </Link>
           <Link to="/register" className="text-sm font-semibold leading-6 text-central">
             Register
           </Link>
-        <div className="hidden lg:flex lg:justify-end">
-          <Link to="/login" className="text-sm font-semibold leading-6 text-central">
-            Log in
-          </Link>
-        </div>
-        <Popover className="relative">
+          <div className="hidden lg:flex lg:justify-end">
+            <Link to="/login" className="text-sm font-semibold leading-6 text-central">
+              Log in
+            </Link>
+          </div>
+          <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-central">
               User
               <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
@@ -85,9 +72,9 @@ export default function Example() {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="absolute -right-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+              <Popover.Panel className="absolute -right-8 top-full z-10 mt-3 w-screen max-w-xs overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
-                  {products.map((item) => (
+                  {userLinks.map((item) => (
                     <div
                       key={item.name}
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-central-2"
@@ -96,27 +83,15 @@ export default function Example() {
                         <item.icon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
                       </div>
                       <div className="flex-auto">
-                        <a href={item.href} className="block font-semibold text-central">
+                        <Link to={item.href} className="block font-semibold text-central">
                           {item.name}
                           <span className="absolute inset-0" />
-                        </a>
-                        <p className="mt-1 text-gray-600">{item.description}</p>
+                        </Link>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
-                  {callsToAction.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-central hover:bg-central-2"
-                    >
-                      <item.icon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
+
               </Popover.Panel>
             </Transition>
           </Popover>
@@ -127,9 +102,9 @@ export default function Example() {
         <div className="fixed inset-0 z-10" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
+            <Link to="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-            </a>
+            </Link>
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
@@ -146,18 +121,18 @@ export default function Example() {
                   {({ open }) => (
                     <>
                       <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-central hover:bg-gray-50">
-                        Product
+                        User
                         <ChevronDownIcon
                           className={classNames(open ? 'rotate-180' : '', 'h-5 w-5 flex-none')}
                           aria-hidden="true"
                         />
                       </Disclosure.Button>
                       <Disclosure.Panel className="mt-2 space-y-2">
-                        {[...products, ...callsToAction].map((item) => (
+                        {[...userLinks].map((item) => (
                           <Disclosure.Button
                             key={item.name}
-                            as="a"
-                            href={item.href}
+                            as={Link}
+                            to={item.href}
                             className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-central hover:bg-gray-50"
                           >
                             {item.name}
@@ -167,26 +142,32 @@ export default function Example() {
                     </>
                   )}
                 </Disclosure>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
                 >
                   Features
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  to="#"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
                 >
                   Marketplace
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  to="#"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
                 >
                   Company
-                </a>
+                </Link>
               </div>
               <div className="py-6">
+                <Link
+                  to="/register"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-central hover:bg-gray-50"
+                >
+                  Register
+                </Link>
                 <Link
                   to="/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-central hover:bg-gray-50"
