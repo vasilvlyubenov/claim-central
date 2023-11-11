@@ -43,12 +43,12 @@ export default function UserInfoPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center profile">
+        <div className="min-h-screen flex items-center justify-center text-central profile">
             <div className="w-full max-w-md p-4">
                 <h2 className="text-2xl font-semibold text-center text-central mb-4">User Information</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label htmlFor="email" className="block text-gray-700 font-medium">
+                        <label htmlFor="email" className="block font-medium">
                             Email
                         </label>
                         <input
@@ -63,7 +63,7 @@ export default function UserInfoPage() {
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="firm" className="block text-gray-700 font-medium">
+                        <label htmlFor="firm" className="block font-medium">
                             Firm
                         </label>
                         <input
@@ -78,7 +78,7 @@ export default function UserInfoPage() {
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="userType" className="block text-gray-700 font-medium">
+                        <label htmlFor="userType" className="block font-medium">
                             User Type
                         </label>
                         <select
@@ -99,7 +99,7 @@ export default function UserInfoPage() {
                         </select>
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="address" className="block text-gray-700 font-medium">
+                        <label htmlFor="address" className="block font-medium">
                             Address
                         </label>
                         <textarea

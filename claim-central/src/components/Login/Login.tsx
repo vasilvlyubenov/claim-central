@@ -22,12 +22,12 @@ export default function Login() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Here, you can add your login logic using the formData state
+    
     console.log('Login form submitted:', formData);
   };
 
   return (
-    <div className="flex items-center justify-center login">
+    <div className="flex items-center justify-center text-central login">
       <div className="w-full max-w-md p-4">
         <h2 className="text-2xl font-semibold text-center text-central mb-4">Login</h2>
         <form onSubmit={handleSubmit}>

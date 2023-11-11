@@ -30,7 +30,7 @@ export default function Register() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Add your registration logic here, using formData
+    
     console.log('Registration form submitted:', formData);
   };
 

@@ -5,13 +5,14 @@ import {
   Bars3Icon,
   XMarkIcon,
   UserCircleIcon,
-  XCircleIcon
+  XCircleIcon,
+  PencilSquareIcon
 } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
 const userLinks = [
   { name: 'Profile', href: '/profile', icon: UserCircleIcon },
-  { name: 'Change Password', href: '/change-password', icon: XCircleIcon },
+  { name: 'Change Password', href: '/change-password', icon: PencilSquareIcon },
   { name: 'Logout', href: '/logout', icon: XCircleIcon },
 ];
 
@@ -26,7 +27,7 @@ export default function Example() {
     <header className="bg-white">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8 " aria-label="Global">
         <div className="flex lg:flex-1">
-          <Link to="#" className="-m-1.5 p-1.5">
+          <Link to="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img className="h-8 w-auto" src="/src/assets/icon.png" alt="" />
           </Link>
