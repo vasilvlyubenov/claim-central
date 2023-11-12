@@ -1,29 +1,27 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import './Login.css';
+// import { useUserSignOutQuery } from '../../features/user/userSlice';
 
-type FormData = {
-  username: string;
-  password: string;
-}
 
 export default function Login() {
-  const [formData, setFormData] = useState<FormData>({
-    username: '',
-    password: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const changeEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);    
   };
+
+  const changePasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  // const { data } = useUserSignInQuery({ email: 'vasil.lyubenov@gmail.com', password: '123123' });
+  // const { data } = useUserSignOutQuery();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    
-    console.log('Login form submitted:', formData);
+
+    console.log('Login form submitted:');
   };
 
   return (
@@ -39,8 +37,8 @@ export default function Login() {
               type="text"
               id="username"
               name="username"
-              value={formData.username}
-              onChange={handleInputChange}
+              value={email}
+              onChange={changeEmailHandler}
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
@@ -52,8 +50,8 @@ export default function Login() {
               type="password"
               id="password"
               name="password"
-              value={formData.password}
-              onChange={handleInputChange}
+              value={password}
+              onChange={changePasswordHandler}
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>

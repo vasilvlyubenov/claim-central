@@ -84,7 +84,7 @@ export default function ChangePassword() {
           <div className="mb-4">
             <button
               type="submit"
-              className="w-full text-white p-2 rounded "
+              className="w-full text-white p-2 rounded"
             >
               Change Password
             </button>
