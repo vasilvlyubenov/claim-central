@@ -16,35 +16,24 @@ export default function Login() {
 
   // Email
   const changeEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);    
+    setEmail(e.target.value);
   };
 
   const changePasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  const validateEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {    
+  const validateEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const result = validateEmail(e.target.value);
+    setErrors(state => ({ ...state, email: result.message }));
+    setIsDisabled(result.type);
 
-    if (result.type === false) {
-      setErrors(state => ({...state, email: result.message}));
-      setIsDisabled(true);
-    } else {
-      setErrors(state => ({...state, email: ''}));
-      setIsDisabled(false);
-    }
   };
 
   const validatePasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const result = validatePassword(e.target.value);
-
-    if (result.type === false) {      
-      setErrors(state => ({...state, password: result.message}));
-      setIsDisabled(true);
-    } else {
-      setErrors(state => ({...state, password: ''}));
-      setIsDisabled(false);
-    }
+    setErrors(state => ({ ...state, password: result.message }));
+    setIsDisabled(result.type);
   };
 
   // const { data } = useUserSignInQuery({ email: 'vasil.lyubenov@gmail.com', password: '123123' });
@@ -75,7 +64,7 @@ export default function Login() {
               onBlur={validateEmailHandler}
               required
             />
-          {errors.email && (<p className='login-error'>{errors.email}</p>)}
+            {errors.email && (<p className='login-error'>{errors.email}</p>)}
           </div>
           <div className="mb-4">
             <label htmlFor="password" className="block font-medium">
@@ -91,7 +80,7 @@ export default function Login() {
               onBlur={validatePasswordHandler}
               required
             />
-          {errors.password && (<p className='login-error'>{errors.password}</p>)}
+            {errors.password && (<p className='login-error'>{errors.password}</p>)}
           </div>
           <div className="mb-4">
             <button
