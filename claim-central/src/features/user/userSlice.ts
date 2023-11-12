@@ -15,9 +15,9 @@ export const userApi = firestoreApi.injectEndpoints({
                     const result: User = response.user;
 
                     return { data: result };
-                } catch (error: any) {
+                } catch (error) {
                     console.error(error);
-                    return error.message;
+                    return { error };
                 }
             },
             providesTags: ['User']
@@ -34,9 +34,9 @@ export const userApi = firestoreApi.injectEndpoints({
 
                     return { data: result, docId: docRefId };
 
-                } catch (error: any) {
+                } catch (error) {
                     console.error(error);
-                    return error.message;
+                    return { error };
                 }
             },
             providesTags: ['User']
@@ -52,10 +52,10 @@ export const userApi = firestoreApi.injectEndpoints({
                         }
                     });
 
-                    return listener();
-                } catch (error: any) {
-                    console.error(error.message);
-                    return error.message;
+                    return {data: listener()};
+                } catch (error) {
+                    console.error(error);
+                    return { error };
                 }
             },
             providesTags: ['User']
@@ -66,9 +66,9 @@ export const userApi = firestoreApi.injectEndpoints({
                     const result = await signOut(auth);
 
                     return { data: result };
-                } catch (error: any) {
-                    console.error(error.message);
-                    return error.message;
+                } catch (error) {
+                    console.error(error);
+                    return { error };
                 }
             },
             providesTags: ['User']

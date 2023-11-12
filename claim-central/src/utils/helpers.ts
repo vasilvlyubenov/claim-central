@@ -5,7 +5,7 @@
  */
 export const validateEmail = (email: string) => {
     const result = {
-        type: true,
+        type: false,
         message: '',
     };
 
@@ -13,10 +13,10 @@ export const validateEmail = (email: string) => {
     const isValid = emailRegex.test(email);
 
     if (email === '') {
-        result.type = false;
+        result.type = true;
         result.message = 'Email is required';
     } else if (!isValid) {
-        result.type = false;
+        result.type = true;
         result.message = 'Email is invalid';
     }
 
@@ -34,24 +34,24 @@ export const validateEmail = (email: string) => {
 
 export const validatePassword = (password: string, level: number = 0) => {
     const result = {
-        type: true,
+        type: false,
         message: '',
     };
 
     const digitReg = /(?=.*\d)/;
 
     if (password === '') {
-        result.type = false;
+        result.type = true;
         result.message = 'Password is required';
     } 
 
     if (level !== 0) {
         if (password.length < 6) {
-            result.type = false;
+            result.type = true;
             result.message = 'Password has to be at least 6 characters.';
             return result;
         } else if (!digitReg.test(password)) {
-            result.type = false;
+            result.type = true;
             result.message = 'Password has to have at least one digit.';
     
             return result;
