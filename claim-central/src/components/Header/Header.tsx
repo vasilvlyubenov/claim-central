@@ -9,11 +9,13 @@ import {
   PencilSquareIcon
 } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { useUserSignOutQuery } from '../../features/user/userSlice';
+import './Header.css';
 
 const userLinks = [
   { name: 'Profile', href: '/profile', icon: UserCircleIcon },
   { name: 'Change Password', href: '/change-password', icon: PencilSquareIcon },
-  { name: 'Logout', href: '/logout', icon: XCircleIcon },
+  // { name: 'Logout', href: '#!', icon: XCircleIcon },
 ];
 
 function classNames(...classes: string[]) {
@@ -22,6 +24,19 @@ function classNames(...classes: string[]) {
 
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [skip, setSkip] = useState(true);
+  const {data, isSuccess} = useUserSignOutQuery(null, {
+    skip
+  });
+
+  const logout = () => {
+    setSkip(false);
+    console.log(data);
+    
+    if (isSuccess) {
+      setSkip(true);
+    }
+  };
 
   return (
     <header className="bg-white">
@@ -84,13 +99,27 @@ export default function Example() {
                         <item.icon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
                       </div>
                       <div className="flex-auto">
-                        <Link to={item.href} className="block font-semibold text-central">
+                        <Link to={item.href} className="block font-semibold text-central" onClick={(item.name === 'Logout') ? logout : undefined}>
                           {item.name}
                           <span className="absolute inset-0" />
                         </Link>
                       </div>
                     </div>
                   ))}
+                    <div
+                      key={'logout'}
+                      className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-central-2"
+                    >
+                      <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                        <XCircleIcon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
+                      </div>
+                      <div className="flex-auto">
+                        <button className="inline font-semibold text-central" onClick={logout}>
+                          Logout
+                          <span className="absolute inset-0" />
+                        </button>
+                      </div>
+                    </div>
                 </div>
 
               </Popover.Panel>
@@ -139,6 +168,14 @@ export default function Example() {
                             {item.name}
                           </Disclosure.Button>
                         ))}
+                        <Disclosure.Button
+                            key={'logout'}
+                            as="span"
+                            className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-central hover:bg-gray-50 logout-btn"
+                            onClick={logout}
+                          >
+                            Logout
+                          </Disclosure.Button>
                       </Disclosure.Panel>
                     </>
                   )}

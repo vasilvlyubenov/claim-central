@@ -46,7 +46,6 @@ export default function Login() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSkip(false);
-    console.log(error);
     
     if (error) {
       setErrors(state => ({...state, error: error}));

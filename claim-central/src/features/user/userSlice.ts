@@ -1,5 +1,5 @@
 import { firestoreApi } from '../../app/firebaseApi';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updatePassword, User } from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { UserLogin } from '../../types/UserLogin';
@@ -52,7 +52,7 @@ export const userApi = firestoreApi.injectEndpoints({
                         }
                     });
 
-                    return {data: listener()};
+                    return { data: listener() };
                 } catch (error) {
                     console.error(error);
                     return { error };
@@ -60,7 +60,7 @@ export const userApi = firestoreApi.injectEndpoints({
             },
             providesTags: ['User']
         }),
-        userSignOut: builder.query<void, void>({
+        userSignOut: builder.query({
             async queryFn() {
                 try {
                     const result = await signOut(auth);
@@ -73,7 +73,20 @@ export const userApi = firestoreApi.injectEndpoints({
             },
             providesTags: ['User']
         }),
+        userUpdatePassword: builder.query({
+            async queryFn({ user, password }) {
+                try {
+                    const result = await updatePassword(user, password);
+
+                    return { data: result };
+                } catch (error) {
+                    console.error(error);
+                    return { error };
+                }
+            },
+            providesTags: ['User']
+        }),
     }),
 });
 
-export const { useUserSignInQuery, useUserSignUpQuery, useUserIsLoggedInQuery, useUserSignOutQuery } = userApi;
+export const { useUserSignInQuery, useUserSignUpQuery, useUserIsLoggedInQuery, useUserSignOutQuery, useUserUpdatePasswordQuery } = userApi;
