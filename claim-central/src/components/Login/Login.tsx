@@ -1,8 +1,10 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import './Login.css';
 import { validateEmail, validatePassword } from '../../utils/helpers';
 import Spinner from 'components/common/Spinner/Spinner';
-import { useUserSignInQuery } from '../../features/user/userSlice';
+import { useUserSignInQuery } from '../../features/user/userApi';
+import { useAppDispatch } from '../../app/hooks';
+import { setUser } from '../../features/user/userSlice';
 
 const loginErrorsInitalState = {
   email: '',
@@ -16,7 +18,15 @@ export default function Login() {
   const [errors, setErrors] = useState(loginErrorsInitalState);
   const [isDisabled, setIsDisabled] = useState(false);
   const [skip, setSkip] = useState(true);
-  const { isFetching, error } = useUserSignInQuery({ email, password }, { skip });
+  const { data: userData, isFetching, isSuccess, error } = useUserSignInQuery({ email, password }, { skip });
+  const dispatch = useAppDispatch();
+
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setUser({uid: userData.uid, email: userData.email, refreshToken: userData.refreshToken}));
+    }
+  }, [isSuccess]);
 
   // Email
   const changeEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +51,8 @@ export default function Login() {
     setErrors(state => ({ ...state, password: result.message }));
     setIsDisabled(result.type);
     setSkip(true);
+    
+
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -64,13 +76,13 @@ export default function Login() {
               {Object.keys(errors.error).length > 0 && <p className='login-error'>Something went wrong!</p>}
               <div className="mb-4">
                 <label htmlFor="username" className="block font-medium">
-                  Username
+                  Email
                 </label>
                 <input
                   className="w-full p-2 border border-gray-300 rounded"
                   type="text"
-                  id="username"
-                  name="username"
+                  id="email"
+                  name="email"
                   value={email}
                   onChange={changeEmailHandler}
                   onBlur={validateEmailHandler}

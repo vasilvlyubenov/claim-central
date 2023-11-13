@@ -9,8 +9,10 @@ import {
   PencilSquareIcon
 } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { useUserSignOutQuery } from '../../features/user/userSlice';
+import { useUserSignOutQuery } from '../../features/user/userApi';
+import { logout } from '../../features/user/userSlice';
 import './Header.css';
+import { useAppDispatch } from '../../app/hooks';
 
 const userLinks = [
   { name: 'Profile', href: '/profile', icon: UserCircleIcon },
@@ -25,14 +27,13 @@ function classNames(...classes: string[]) {
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [skip, setSkip] = useState(true);
-  const {data, isSuccess} = useUserSignOutQuery(null, {
-    skip
-  });
+  const { isSuccess } = useUserSignOutQuery(null, { skip });
+  const dispatch = useAppDispatch();
 
-  const logout = () => {
+  const logoutUser = () => {
     setSkip(false);
-    console.log(data);
-    
+    dispatch(logout());
+
     if (isSuccess) {
       setSkip(true);
     }
@@ -99,27 +100,27 @@ export default function Example() {
                         <item.icon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
                       </div>
                       <div className="flex-auto">
-                        <Link to={item.href} className="block font-semibold text-central" onClick={(item.name === 'Logout') ? logout : undefined}>
+                        <Link to={item.href} className="block font-semibold text-central">
                           {item.name}
                           <span className="absolute inset-0" />
                         </Link>
                       </div>
                     </div>
                   ))}
-                    <div
-                      key={'logout'}
-                      className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-central-2"
-                    >
-                      <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                        <XCircleIcon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
-                      </div>
-                      <div className="flex-auto">
-                        <button className="inline font-semibold text-central" onClick={logout}>
-                          Logout
-                          <span className="absolute inset-0" />
-                        </button>
-                      </div>
+                  <div
+                    key={'logout'}
+                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-central-2"
+                  >
+                    <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                      <XCircleIcon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
                     </div>
+                    <div className="flex-auto">
+                      <button className="inline font-semibold text-central" onClick={logoutUser}>
+                        Logout
+                        <span className="absolute inset-0" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
               </Popover.Panel>
@@ -169,13 +170,13 @@ export default function Example() {
                           </Disclosure.Button>
                         ))}
                         <Disclosure.Button
-                            key={'logout'}
-                            as="span"
-                            className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-central hover:bg-gray-50 logout-btn"
-                            onClick={logout}
-                          >
-                            Logout
-                          </Disclosure.Button>
+                          key={'logout'}
+                          as="span"
+                          className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-central hover:bg-gray-50 logout-btn"
+                          onClick={logoutUser}
+                        >
+                          Logout
+                        </Disclosure.Button>
                       </Disclosure.Panel>
                     </>
                   )}
