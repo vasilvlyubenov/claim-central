@@ -76,7 +76,8 @@ export default function Example() {
 
           {user.uid && <UserNavPopover
             userLinks={userLinks}
-            logout={logoutUser} />}
+            logout={logoutUser} 
+            userEmail={user.email ?? ''}/>}
 
           {!user.uid && <GuestPopover />}
 
@@ -114,6 +115,7 @@ export default function Example() {
                 userLinks={userLinks} 
                 logout={logoutUser}
                 closeMenu={handleCloseMobileMenu}
+                userEmail={user.email ?? ''}
                 />}
 
               </div>

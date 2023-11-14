@@ -1,12 +1,19 @@
-import { firestoreApi } from '../../app/firebaseApi';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updatePassword, User } from 'firebase/auth';
+import { firebaseApi } from '../../app/firebaseApi';
+import {
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut,
+    updatePassword,
+    User
+} from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { UserLogin } from '../../types/UserLogin';
 import { UserRegister } from '../../types/UserRegister';
 
 
-export const userApi = firestoreApi.injectEndpoints({
+export const userApi = firebaseApi.injectEndpoints({
     endpoints: (builder) => ({
         userSignIn: builder.query({
             async queryFn(input: UserLogin) {

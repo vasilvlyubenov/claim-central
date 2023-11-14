@@ -9,6 +9,7 @@ import { LogoutFunction } from "../../../types/LogoutFunction";
 export default function UserNavPopover(props: {
     userLinks: UserLink[],
     logout: LogoutFunction,
+    userEmail: string
 }) {
 
     return (
@@ -18,7 +19,7 @@ export default function UserNavPopover(props: {
             </Link>
             <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-central">
-              User
+              {props.userEmail}
               <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
             </Popover.Button>
 

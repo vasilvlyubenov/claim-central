@@ -14,6 +14,7 @@ export default function UserNavDisclosure(props: {
     userLinks: UserLink[],
     logout: LogoutFunction,
     closeMenu: CloseMobileMenu
+    userEmail: string
 }) {
 
     const handleLogOutClick = () => {
@@ -26,7 +27,7 @@ export default function UserNavDisclosure(props: {
             {({ open }) => (
                 <>
                     <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-central hover:bg-gray-50">
-                        User
+                        {props.userEmail}
                         <ChevronDownIcon
                             className={classNames(open ? 'rotate-180' : '', 'h-5 w-5 flex-none')}
                             aria-hidden="true"

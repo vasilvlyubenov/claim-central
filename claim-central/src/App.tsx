@@ -7,8 +7,17 @@ import Login from 'components/Login/Login';
 import Register from 'components/Register/Register';
 import Profile from 'components/Profile/Profile';
 import ChangePassword from 'components/ChangePassword/ChangePassword';
+import { ProtectedRouteProps } from 'types/ProtectedRouteProps';
+import { useAppSelector } from './app/hooks';
+import AuthRouteGuard from './guards/AuthRouteGuard';
+import LoggedInRouteGuard from './guards/LoggedInRouteGuard';
 
 function App() {
+  const user = useAppSelector((state) => state.user);
+
+  const protectedRouteProps: Omit<ProtectedRouteProps, 'component'> = {
+    isAuth: !!user.uid,
+  };
 
   return (
     <>
@@ -16,10 +25,10 @@ function App() {
       <div className='content'>
           <Routes>
             <Route path='/' />
-            <Route path='/login' element={<Login/>} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/change-password' element={<ChangePassword />} />
+            <Route path='/login' element={ <LoggedInRouteGuard {...protectedRouteProps} component={<Login/>} />} />
+            <Route path='/register' element={<LoggedInRouteGuard {...protectedRouteProps} component={<Register/>} />} />
+            <Route path='/profile' element={<AuthRouteGuard {...protectedRouteProps} component={<Profile />} />} />
+            <Route path='/change-password' element={<AuthRouteGuard {...protectedRouteProps} component={<ChangePassword />} />} />
           </Routes>
           
       </div>
