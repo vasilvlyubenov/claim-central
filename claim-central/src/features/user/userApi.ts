@@ -20,9 +20,8 @@ export const userApi = firestoreApi.injectEndpoints({
                     return { error };
                 }
             },
-            providesTags: ['User']
         }),
-        userSignUp: builder.query({
+        userSignUp: builder.mutation({
             async queryFn(input: UserRegister) {
                 try {
                     const response = await createUserWithEmailAndPassword(auth, input.email, input.password);
@@ -39,7 +38,6 @@ export const userApi = firestoreApi.injectEndpoints({
                     return { error };
                 }
             },
-            providesTags: ['User']
         }),
         userIsLoggedIn: builder.query({
             async queryFn() {
@@ -89,4 +87,4 @@ export const userApi = firestoreApi.injectEndpoints({
     }),
 });
 
-export const { useUserSignInQuery, useUserSignUpQuery, useUserIsLoggedInQuery, useUserSignOutQuery, useUserUpdatePasswordQuery } = userApi;
+export const { useUserSignInQuery, useUserSignUpMutation, useUserIsLoggedInQuery, useUserSignOutQuery, useUserUpdatePasswordQuery } = userApi;

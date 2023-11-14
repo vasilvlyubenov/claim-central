@@ -26,7 +26,7 @@ export default function Login() {
     if (isSuccess) {
       dispatch(setUser({uid: userData.uid, email: userData.email, refreshToken: userData.refreshToken}));
     }
-  }, [isSuccess]);
+  }, [isSuccess,userData, dispatch]);
 
   // Email
   const changeEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
