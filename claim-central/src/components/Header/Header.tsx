@@ -30,7 +30,7 @@ export default function Example() {
   const [skip, setSkip] = useState(true);
   const { error, isSuccess } = useUserSignOutQuery(null, { skip });
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user);  
 
   const logoutUser = () => {
     setSkip(false);
@@ -76,8 +76,8 @@ export default function Example() {
 
           {user.uid && <UserNavPopover
             userLinks={userLinks}
-            logout={logoutUser} 
-            userEmail={user.email ?? ''}/>}
+            logout={logoutUser}
+            userEmail={user.email ?? ''} />}
 
           {!user.uid && <GuestPopover />}
 
@@ -111,16 +111,16 @@ export default function Example() {
                   Dashboard
                 </Link>
 
-                {user.uid && <UserNavDisclosure 
-                userLinks={userLinks} 
-                logout={logoutUser}
-                closeMenu={handleCloseMobileMenu}
-                userEmail={user.email ?? ''}
+                {user.uid && <UserNavDisclosure
+                  userLinks={userLinks}
+                  logout={logoutUser}
+                  closeMenu={handleCloseMobileMenu}
+                  userEmail={user.email ?? ''}
                 />}
 
               </div>
 
-              {!user.uid && <GuestNavDisclosure  closeMenu={handleCloseMobileMenu}/>}
+              {!user.uid && <GuestNavDisclosure closeMenu={handleCloseMobileMenu} />}
 
             </div>
           </div>

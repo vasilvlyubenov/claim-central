@@ -1,7 +1,6 @@
 import { firebaseApi } from '../../app/firebaseApi';
 import {
     createUserWithEmailAndPassword,
-    onAuthStateChanged,
     signInWithEmailAndPassword,
     signOut,
     updatePassword,
@@ -46,25 +45,6 @@ export const userApi = firebaseApi.injectEndpoints({
                 }
             },
         }),
-        userIsLoggedIn: builder.query({
-            async queryFn() {
-                try {
-                    const listener = onAuthStateChanged(auth, (res) => {
-                        if (res) {
-                            return { data: res };
-                        } else {
-                            return { data: null };
-                        }
-                    });
-
-                    return { data: listener() };
-                } catch (error) {
-                    console.error(error);
-                    return { error };
-                }
-            },
-            providesTags: ['User']
-        }),
         userSignOut: builder.query({
             async queryFn() {
                 try {
@@ -76,7 +56,6 @@ export const userApi = firebaseApi.injectEndpoints({
                     return { error };
                 }
             },
-            providesTags: ['User']
         }),
         userUpdatePassword: builder.query({
             async queryFn({ user, password }) {
@@ -89,9 +68,8 @@ export const userApi = firebaseApi.injectEndpoints({
                     return { error };
                 }
             },
-            providesTags: ['User']
         }),
     }),
 });
 
-export const { useUserSignInQuery, useUserSignUpMutation, useUserIsLoggedInQuery, useUserSignOutQuery, useUserUpdatePasswordQuery } = userApi;
+export const { useUserSignInQuery, useUserSignUpMutation, useUserSignOutQuery, useUserUpdatePasswordQuery } = userApi;
