@@ -1,0 +1,12 @@
+.register .deadlines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3em;
+    justify-content: center;
+    max-width: 50em;
+    margin-top: 1em;
+}
+
+.register .deadlines .deadline-item {
+    max-width: 5em;
+}

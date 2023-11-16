@@ -1,27 +1,37 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import './Register.css';
-
-type FormData = {
-  email: string;
-  password: string;
-  repeatPassword: string;
-  firm: string;
-  userType: '' | 'customer' | 'supplier';
-  address: string;
-}
+import { RegisterFormData } from '../../types/RegisterFormData';
+import Deadlines from './Deadlines/Deadlines';
+import { HandleInputChange } from 'types/HandleInputChange';
 
 export default function Register() {
-  const [formData, setFormData] = useState<FormData>({
+  const [hidable, setHidable] = useState(false);
+  const [formData, setFormData] = useState<RegisterFormData>({
     email: '',
     password: '',
     repeatPassword: '',
     firm: '',
-    userType: 'customer',
+    userType: '',
     address: '',
+    d3: '',
+    d4: '',
+    d5: '',
+    d6: '',
+    d7: '',
+    d8: '',
   });
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange: HandleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+
+    if (name === 'userType') {
+      if (value === 'customer') {
+        setHidable(true);
+      } else {
+        setHidable(false);
+      }
+    }
+
     setFormData({
       ...formData,
       [name]: value,
@@ -30,7 +40,7 @@ export default function Register() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    
+
     console.log('Registration form submitted:', formData);
   };
 
@@ -97,7 +107,7 @@ export default function Register() {
           </div>
           <div className="mb-4">
             <label htmlFor="userType" className="block font-medium">
-              User Type
+              Choose customer or supplier
             </label>
             <select
               id="userType"
@@ -126,6 +136,12 @@ export default function Register() {
               required
             />
           </div>
+
+          {hidable && <Deadlines
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />}
+
           <div className="mb-4">
             <button
               type="submit"
