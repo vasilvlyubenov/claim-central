@@ -1,3 +1,4 @@
+import React, { ChangeEvent, useState } from 'react';
 import { HandleInputChange } from '../../../types/HandleInputChange';
 import { RegisterFormData } from '../../../types/RegisterFormData';
 import './DeadLines.css';
@@ -5,7 +6,19 @@ import './DeadLines.css';
 export default function Deadlines(props: {
     formData: RegisterFormData
     handleInputChange: HandleInputChange
+    handleDisabled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
+    const [error, setErrors] = useState('');
+
+    const validateRequiredHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value === '') {
+          setErrors('All fields are required');
+          props.handleDisabled(true);
+        } else {
+          setErrors('');
+          props.handleDisabled(false);
+        }
+      };
 
     return (
         <div className="mb-4 hidable">
@@ -22,6 +35,7 @@ export default function Deadlines(props: {
                 name="d3"
                 value={props.formData.d3}
                 onChange={props.handleInputChange}
+                onBlur={validateRequiredHandler}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
@@ -36,6 +50,7 @@ export default function Deadlines(props: {
                 name="d4"
                 value={props.formData.d4}
                 onChange={props.handleInputChange}
+                onBlur={validateRequiredHandler}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
@@ -50,6 +65,7 @@ export default function Deadlines(props: {
                 name="d5"
                 value={props.formData.d5}
                 onChange={props.handleInputChange}
+                onBlur={validateRequiredHandler}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
@@ -65,6 +81,7 @@ export default function Deadlines(props: {
                 name="d6"
                 value={props.formData.d6}
                 onChange={props.handleInputChange}
+                onBlur={validateRequiredHandler}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
@@ -79,6 +96,7 @@ export default function Deadlines(props: {
                 name="d7"
                 value={props.formData.d7}
                 onChange={props.handleInputChange}
+                onBlur={validateRequiredHandler}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
@@ -93,10 +111,12 @@ export default function Deadlines(props: {
                 name="d8"
                 value={props.formData.d8}
                 onChange={props.handleInputChange}
+                onBlur={validateRequiredHandler}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
               </div>
+              {error && (<p className='reg-error'>{error}</p>)}
             </div>
           </div>
     );

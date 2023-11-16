@@ -34,15 +34,16 @@ export default function Login() {
     setSkip(true);
   };
 
-  const changePasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    setSkip(true);
-  };
-
   const validateEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const result = validateEmail(e.target.value);
     setErrors(state => ({ ...state, email: result.message }));
     setIsDisabled(result.type);
+    setSkip(true);
+  };
+
+  // Password
+  const changePasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
     setSkip(true);
   };
 
@@ -51,8 +52,6 @@ export default function Login() {
     setErrors(state => ({ ...state, password: result.message }));
     setIsDisabled(result.type);
     setSkip(true);
-    
-
   };
 
   const handleSubmit = (e: FormEvent) => {

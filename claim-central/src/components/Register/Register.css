@@ -14,3 +14,14 @@
 .register button:active {
     background-color: #83451b;
 }
+
+.reg-error {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    padding: 0.2em 1em;
+    color: red;
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid red;
+    text-align: left;
+}

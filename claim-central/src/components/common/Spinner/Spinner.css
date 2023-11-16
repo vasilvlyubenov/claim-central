@@ -3,6 +3,8 @@
     position: relative;
     width: 80px;
     height: 80px;
+    align-self: center;
+    justify-self: center;
 }
 
 .lds-hourglass:after {
@@ -14,7 +16,7 @@
     margin: 8px;
     box-sizing: border-box;
     border: 32px solid #fff;
-    border-color: #fff transparent #fff transparent;
+    border-color: #984e1e transparent #984e1e transparent;
     animation: lds-hourglass 1.2s infinite;
 }
 
