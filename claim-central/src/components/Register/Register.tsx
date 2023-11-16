@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import './Register.css';
 import { RegisterFormData } from '../../types/RegisterFormData';
 import Deadlines from './Deadlines/Deadlines';
@@ -6,6 +6,9 @@ import { HandleInputChange } from 'types/HandleInputChange';
 import Spinner from 'components/common/Spinner/Spinner';
 import { validatePassword } from './../../utils/helpers';
 import { validateEmail } from './../../utils/helpers';
+import { useUserSignUpMutation } from '../../features/user/userApi';
+import { useAppDispatch } from '../../app/hooks';
+import { setUser } from '../../features/user/userSlice';
 
 const initialState: RegisterFormData = {
   email: '',
@@ -37,6 +40,14 @@ export default function Register() {
   const [formData, setFormData] = useState(initialState);
   const [disabled, setDisabled] = useState(false);
   const [errors, setErrors] = useState(initialErrorsState);
+  const [userSignUp, { data, isSuccess }] = useUserSignUpMutation();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setUser({uid: data?.user.uid, email: data?.user.email, refreshToken: data?.user.refreshToken, userType: formData.userType, docRefId: data?.docId}));
+    }
+  }, [isSuccess, dispatch, data, formData]);
 
 
   const handleInputChange: HandleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -58,8 +69,7 @@ export default function Register() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
-    console.log('Registration form submitted:', formData);
+    userSignUp(formData);
   };
 
   const validateEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
