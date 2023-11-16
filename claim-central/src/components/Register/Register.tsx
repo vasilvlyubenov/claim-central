@@ -60,11 +60,6 @@ export default function Register() {
     e.preventDefault();
 
     console.log('Registration form submitted:', formData);
-    // if (error) {
-    //   setErrors(state => ({...state, error: error}));
-    // } else {
-    //   setErrors(state => ({...state, error: {}}));
-    // }
   };
 
   const validateEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +108,6 @@ export default function Register() {
   };
 
   const validateAddresHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value);
 
     if (e.target.value === '') {
       setErrors(state => ({ ...state, address: 'Field is required' }));
