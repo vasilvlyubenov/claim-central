@@ -7,7 +7,7 @@ import {
     User
 } from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { UserLogin } from '../../types/UserLogin';
 import { UserRegister } from '../../types/UserRegister';
 
@@ -34,10 +34,23 @@ export const userApi = firebaseApi.injectEndpoints({
                     const result = response.user;
 
                     const users = collection(db, 'users');
-                    const docRef = await addDoc(users, { authId: result.uid, firm: input.firm, type: input.type, address: input.address });
+                    const docRef = await addDoc(users, {
+                        authId: result.uid,
+                        firm: input.firm,
+                        userType: input.userType,
+                        address: input.address,
+                        deadlines: {
+                            d3: input.d3,
+                            d4: input.d4,
+                            d5: input.d5,
+                            d6: input.d6,
+                            d7: input.d7,
+                            d8: input.d8,
+                        }
+                    });
                     const docRefId = docRef.id;
 
-                    return { data: result, docId: docRefId };
+                    return { data: { user: result, docId: docRefId } };
 
                 } catch (error) {
                     console.error(error);
@@ -68,6 +81,18 @@ export const userApi = firebaseApi.injectEndpoints({
                     return { error };
                 }
             },
+        }),
+        getUserInfo: builder.query({
+            async queryFn(docId: string) {
+                try {
+                    const docRef = doc(db, 'users', docId);
+                    const docSnap = await getDoc(docRef);
+
+                    return {data: docSnap.data()};
+                } catch (error) {
+                    return {error: error};
+                }
+            }
         }),
     }),
 });
