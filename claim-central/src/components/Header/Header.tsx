@@ -30,7 +30,7 @@ export default function Example() {
   const [skip, setSkip] = useState(true);
   const { error, isSuccess } = useUserSignOutQuery(null, { skip });
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);  
+  const user = useAppSelector((state) => state.user);
 
   const logoutUser = () => {
     setSkip(false);

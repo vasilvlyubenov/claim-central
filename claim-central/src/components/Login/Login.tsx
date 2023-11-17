@@ -18,15 +18,18 @@ export default function Login() {
   const [errors, setErrors] = useState(loginErrorsInitalState);
   const [isDisabled, setIsDisabled] = useState(false);
   const [skip, setSkip] = useState(true);
-  const { data: userData, isFetching, isSuccess, error } = useUserSignInQuery({ email, password }, { skip });
+  const [userId, setUserId] = useState('');
+  const { data: userData, isFetching, isSuccess: signSuccess, error } = useUserSignInQuery({ email, password }, { skip });
   const dispatch = useAppDispatch();
 
 
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(setUser({uid: userData.uid, email: userData.email, refreshToken: userData.refreshToken}));
+    if (signSuccess) {
+      setUserId(userData.uid);
+      setSkip(true);
+      dispatch(setUser({ uid: userData.uid, email: userData.email, refreshToken: userData.refreshToken, userType: userData.displayName }));
     }
-  }, [isSuccess,userData, dispatch]);
+  }, [signSuccess, userData, dispatch, userId]);
 
   // Email
   const changeEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,11 +60,11 @@ export default function Login() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSkip(false);
-    
+
     if (error) {
-      setErrors(state => ({...state, error: error}));
+      setErrors(state => ({ ...state, error: error }));
     } else {
-      setErrors(state => ({...state, error: {}}));
+      setErrors(state => ({ ...state, error: {} }));
     }
   };
 

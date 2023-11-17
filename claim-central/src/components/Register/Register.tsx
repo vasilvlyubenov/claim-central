@@ -45,7 +45,7 @@ export default function Register() {
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setUser({uid: data?.user.uid, email: data?.user.email, refreshToken: data?.user.refreshToken, userType: formData.userType, docRefId: data?.docId}));
+      dispatch(setUser({uid: data?.user.uid, email: data?.user.email, refreshToken: data?.user.refreshToken, userType: formData.userType}));
     }
   }, [isSuccess, dispatch, data, formData]);
 

@@ -4,10 +4,11 @@ import {
     signInWithEmailAndPassword,
     signOut,
     updatePassword,
+    updateProfile,
     User
 } from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { UserLogin } from '../../types/UserLogin';
 import { UserRegister } from '../../types/UserRegister';
 
@@ -32,10 +33,12 @@ export const userApi = firebaseApi.injectEndpoints({
                 try {
                     const response = await createUserWithEmailAndPassword(auth, input.email, input.password);
                     const result = response.user;
+                    
+                    await updateProfile(result, { displayName: input.userType });
 
-                    const users = collection(db, 'users');
-                    const docRef = await addDoc(users, {
-                        authId: result.uid,
+                    const users = doc(db, 'users', result.uid);
+                    await setDoc(users, {
+                        userId: result.uid,
                         firm: input.firm,
                         userType: input.userType,
                         address: input.address,
@@ -48,9 +51,8 @@ export const userApi = firebaseApi.injectEndpoints({
                             d8: input.d8,
                         }
                     });
-                    const docRefId = docRef.id;
 
-                    return { data: { user: result, docId: docRefId } };
+                    return { data: { user: result } };
 
                 } catch (error) {
                     console.error(error);
@@ -83,18 +85,19 @@ export const userApi = firebaseApi.injectEndpoints({
             },
         }),
         getUserInfo: builder.query({
-            async queryFn(docId: string) {
+            async queryFn(userId) {
                 try {
-                    const docRef = doc(db, 'users', docId);
+
+                    const docRef = doc(db, 'users', userId);
                     const docSnap = await getDoc(docRef);
 
-                    return {data: docSnap.data()};
+                    return { data: docSnap.data() };
                 } catch (error) {
-                    return {error: error};
+                    return { error: error };
                 }
             }
         }),
     }),
 });
 
-export const { useUserSignInQuery, useUserSignUpMutation, useUserSignOutQuery, useUserUpdatePasswordQuery } = userApi;
+export const { useUserSignInQuery, useUserSignUpMutation, useUserSignOutQuery, useUserUpdatePasswordQuery, useGetUserInfoQuery } = userApi;

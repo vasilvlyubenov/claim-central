@@ -20,12 +20,14 @@ function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        dispatch(setUser({uid: user.uid, email: user.email, refreshToken: user.refreshToken}));
+    const unsubscribe = onAuthStateChanged(auth, (res) => {
+      if (res) {
+        dispatch(setUser({ uid: res.uid, email: res.email, refreshToken: res.refreshToken, userType: res.displayName }));
+      } else {
+        return null;
       }
+      return () => unsubscribe();
     });
-    return () => unsubscribe();
   }, [dispatch]);
 
   const protectedRouteProps: Omit<ProtectedRouteProps, 'component'> = {
