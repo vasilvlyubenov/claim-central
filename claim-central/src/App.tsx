@@ -14,6 +14,7 @@ import LoggedInRouteGuard from './guards/LoggedInRouteGuard';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
 import { setUser } from './features/user/userSlice';
+import NewClaim from 'components/NewClaim/NewClaim';
 
 function App() {
   const user = useAppSelector((state) => state.user);
@@ -44,6 +45,7 @@ function App() {
           <Route path='/register' element={<LoggedInRouteGuard {...protectedRouteProps} component={<Register />} />} />
           <Route path='/profile' element={<AuthRouteGuard {...protectedRouteProps} component={<Profile />} />} />
           <Route path='/change-password' element={<AuthRouteGuard {...protectedRouteProps} component={<ChangePassword />} />} />
+          <Route path='/new-claim' element={<AuthRouteGuard {...protectedRouteProps} component={<NewClaim />} />} />
         </Routes>
       </div>
       <Footer />

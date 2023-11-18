@@ -3,7 +3,7 @@ import { Popover, Transition } from '@headlessui/react';
 import { ChevronDownIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { UserLink } from 'types/UserLink';
-import { LogoutFunction } from "../../../types/LogoutFunction";
+import { LogoutFunction } from '../../../types/LogoutFunction';
 
 
 export default function UserNavPopover(props: {

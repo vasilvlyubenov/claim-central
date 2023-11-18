@@ -8,7 +8,7 @@ import {
     User
 } from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, DocumentData, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { UserLogin } from '../../types/UserLogin';
 import { UserRegister } from '../../types/UserRegister';
 
@@ -63,9 +63,9 @@ export const userApi = firebaseApi.injectEndpoints({
         userSignOut: builder.query({
             async queryFn() {
                 try {
-                    const result = await signOut(auth);
+                    await signOut(auth);
 
-                    return { data: result };
+                    return { data: 'Success' };
                 } catch (error) {
                     console.error(error);
                     return { error };
@@ -91,7 +91,28 @@ export const userApi = firebaseApi.injectEndpoints({
                     const docRef = doc(db, 'users', userId);
                     const docSnap = await getDoc(docRef);
 
-                    return { data: docSnap.data() };
+                    return { data: docSnap };
+                } catch (error) {
+                    return { error: error };
+                }
+            }
+        }),
+        getAllSuppliers: builder.query({
+            async queryFn() {
+                try {
+
+                    const docRef = collection(db, 'users');
+                    const q = query(docRef, where('userType', '==', 'supplier'));
+                    const docSnap = await getDocs(q);
+
+                    const data: DocumentData[] = [];
+
+                    docSnap?.forEach(doc => {
+                        const d = doc.data();
+                        data.push(d);
+                    });
+
+                    return { data: data };
                 } catch (error) {
                     return { error: error };
                 }
@@ -100,4 +121,4 @@ export const userApi = firebaseApi.injectEndpoints({
     }),
 });
 
-export const { useUserSignInQuery, useUserSignUpMutation, useUserSignOutQuery, useUserUpdatePasswordQuery, useGetUserInfoQuery } = userApi;
+export const { useUserSignInQuery, useUserSignUpMutation, useUserSignOutQuery, useUserUpdatePasswordQuery, useGetUserInfoQuery, useGetAllSuppliersQuery } = userApi;

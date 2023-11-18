@@ -29,7 +29,14 @@ export default function Login() {
       setSkip(true);
       dispatch(setUser({ uid: userData.uid, email: userData.email, refreshToken: userData.refreshToken, userType: userData.displayName }));
     }
-  }, [signSuccess, userData, dispatch, userId]);
+
+    
+    if (error) {
+      setErrors(state => ({ ...state, error: error }));
+    } else {
+      setErrors(state => ({ ...state, error: {} }));
+    }
+  }, [signSuccess, userData, dispatch, userId, error]);
 
   // Email
   const changeEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -60,12 +67,6 @@ export default function Login() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSkip(false);
-
-    if (error) {
-      setErrors(state => ({ ...state, error: error }));
-    } else {
-      setErrors(state => ({ ...state, error: {} }));
-    }
   };
 
   return (
@@ -75,7 +76,7 @@ export default function Login() {
           <div className="w-full max-w-md p-4">
             <h2 className="text-2xl font-semibold text-center text-central mb-4">Login</h2>
             <form onSubmit={handleSubmit}>
-              {Object.keys(errors.error).length > 0 && <p className='login-error'>Something went wrong!</p>}
+              {Object.keys(errors.error).length > 0 && <p className='login-error'>Try again!</p>}
               <div className="mb-4">
                 <label htmlFor="username" className="block font-medium">
                   Email

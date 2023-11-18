@@ -103,13 +103,7 @@ export default function Example() {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Link
-                  to="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
-                  onClick={handleCloseMobileMenu}
-                >
-                  Dashboard
-                </Link>
+
 
                 {user.uid && <UserNavDisclosure
                   userLinks={userLinks}
@@ -117,6 +111,21 @@ export default function Example() {
                   closeMenu={handleCloseMobileMenu}
                   userEmail={user.email ?? ''}
                 />}
+
+                <Link
+                  to="#"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
+                  onClick={handleCloseMobileMenu}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/new-claim"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
+                  onClick={handleCloseMobileMenu}
+                >
+                  New claim
+                </Link>
 
               </div>
 

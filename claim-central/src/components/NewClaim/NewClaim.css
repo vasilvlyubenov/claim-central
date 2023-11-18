@@ -1,0 +1,27 @@
+.open select, .open option {
+    color: #000;
+}
+
+.open select:focus {
+    outline: 2px solid #984e1e;
+}
+
+.open button {
+    background-color: #984e1e;
+    font-weight: 600;
+}
+
+.open button:active {
+    background-color: #83451b;
+}
+
+.open-error {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    padding: 0.2em 1em;
+    color: red;
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid red;
+    text-align: left;
+}
