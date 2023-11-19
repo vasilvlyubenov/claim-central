@@ -1,4 +1,4 @@
-.register .deadlines {
+.deadlines {
     display: flex;
     flex-wrap: wrap;
     gap: 3em;
@@ -7,6 +7,6 @@
     margin-top: 1em;
 }
 
-.register .deadlines .deadline-item {
+.deadlines .deadline-item {
     max-width: 5em;
 }

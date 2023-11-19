@@ -1,11 +1,10 @@
 import { TDeadlines } from './TDeadlines';
 
-export type RegisterFormData = {
+export type UserData = {
     email: string;
     password: string;
-    repeatPassword: string;
     firm: string;
-    userType: '' | 'customer' | 'supplier';
+    userType: string;
     address: string;
     deadlines: TDeadlines
-  }
+}

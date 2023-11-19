@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { HandleInputChange } from '../../../types/HandleInputChange';
-import { RegisterFormData } from '../../../types/RegisterFormData';
 import './DeadLines.css';
+import { RegisterFormData } from 'types/RegisterFormData';
 
 export default function Deadlines(props: {
     formData: RegisterFormData
@@ -11,12 +11,12 @@ export default function Deadlines(props: {
     const [error, setErrors] = useState('');
 
     const validateRequiredHandler = () => {
-        if (props.formData.d3 === '' 
-        || props.formData.d4 === '' 
-        || props.formData.d5 === '' 
-        || props.formData.d6 === ''
-        || props.formData.d7 === ''
-        || props.formData.d8 === ''
+        if ((props.formData.deadlines.d3 === '' 
+        || props.formData.deadlines.d4 === '' 
+        || props.formData.deadlines.d5 === '' 
+        || props.formData.deadlines.d6 === ''
+        || props.formData.deadlines.d7 === ''
+        || props.formData.deadlines.d8 === '')
         ) {
             setErrors('All fields are required');
             props.handleDisabled(true);
@@ -39,7 +39,7 @@ export default function Deadlines(props: {
                         type="text"
                         id="firm"
                         name="d3"
-                        value={props.formData.d3}
+                        value={props.formData.deadlines.d3}
                         onChange={props.handleInputChange}
                         onBlur={validateRequiredHandler}
                         className="w-full p-2 border border-gray-300 rounded"
@@ -54,7 +54,7 @@ export default function Deadlines(props: {
                         type="text"
                         id="firm"
                         name="d4"
-                        value={props.formData.d4}
+                        value={props.formData.deadlines.d4}
                         onChange={props.handleInputChange}
                         onBlur={validateRequiredHandler}
                         className="w-full p-2 border border-gray-300 rounded"
@@ -69,7 +69,7 @@ export default function Deadlines(props: {
                         type="text"
                         id="firm"
                         name="d5"
-                        value={props.formData.d5}
+                        value={props.formData.deadlines.d5}
                         onChange={props.handleInputChange}
                         onBlur={validateRequiredHandler}
                         className="w-full p-2 border border-gray-300 rounded"
@@ -85,7 +85,7 @@ export default function Deadlines(props: {
                         type="text"
                         id="firm"
                         name="d6"
-                        value={props.formData.d6}
+                        value={props.formData.deadlines.d6}
                         onChange={props.handleInputChange}
                         onBlur={validateRequiredHandler}
                         className="w-full p-2 border border-gray-300 rounded"
@@ -100,7 +100,7 @@ export default function Deadlines(props: {
                         type="text"
                         id="firm"
                         name="d7"
-                        value={props.formData.d7}
+                        value={props.formData.deadlines.d7}
                         onChange={props.handleInputChange}
                         onBlur={validateRequiredHandler}
                         className="w-full p-2 border border-gray-300 rounded"
@@ -115,7 +115,7 @@ export default function Deadlines(props: {
                         type="text"
                         id="firm"
                         name="d8"
-                        value={props.formData.d8}
+                        value={props.formData.deadlines.d8}
                         onChange={props.handleInputChange}
                         onBlur={validateRequiredHandler}
                         className="w-full p-2 border border-gray-300 rounded"

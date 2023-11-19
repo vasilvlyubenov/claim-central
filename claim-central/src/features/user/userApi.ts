@@ -10,7 +10,7 @@ import {
 import { auth, db } from '../../config/firebase';
 import { collection, doc, DocumentData, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { UserLogin } from '../../types/UserLogin';
-import { UserRegister } from '../../types/UserRegister';
+import { RegisterFormData } from '../../types/RegisterFormData';
 
 
 export const userApi = firebaseApi.injectEndpoints({
@@ -29,7 +29,7 @@ export const userApi = firebaseApi.injectEndpoints({
             },
         }),
         userSignUp: builder.mutation({
-            async queryFn(input: UserRegister) {
+            async queryFn(input: RegisterFormData) {
                 try {
                     const response = await createUserWithEmailAndPassword(auth, input.email, input.password);
                     const result = response.user;
@@ -44,12 +44,12 @@ export const userApi = firebaseApi.injectEndpoints({
                         userType: input.userType,
                         address: input.address,
                         deadlines: {
-                            d3: input.d3,
-                            d4: input.d4,
-                            d5: input.d5,
-                            d6: input.d6,
-                            d7: input.d7,
-                            d8: input.d8,
+                            d3: input.deadlines.d3,
+                            d4: input.deadlines.d4,
+                            d5: input.deadlines.d5,
+                            d6: input.deadlines.d6,
+                            d7: input.deadlines.d7,
+                            d8: input.deadlines.d8,
                         }
                     });
 
@@ -86,13 +86,17 @@ export const userApi = firebaseApi.injectEndpoints({
             },
         }),
         getUserInfo: builder.query({
-            async queryFn(userId) {
+            async queryFn() {
                 try {
+                    const user = auth.currentUser;
 
-                    const docRef = doc(db, 'users', userId);
-                    const docSnap = await getDoc(docRef);
+                    if (user) {
+                        const docRef = doc(db, 'users', user.uid);
+                        const docSnap = await getDoc(docRef);
+                        return { data: docSnap.data() };
+                    }
 
-                    return { data: docSnap };
+                    return { data: {} };
                 } catch (error) {
                     return { error: error };
                 }

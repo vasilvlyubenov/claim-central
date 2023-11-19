@@ -1,149 +1,143 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import './Profile.css';
+import { useGetUserInfoQuery } from '../../features/user/userApi';
+import Spinner from 'components/common/Spinner/Spinner';
+import Deadlines from '../../components/Register/Deadlines/Deadlines';
+import { RegisterFormData } from 'types/RegisterFormData';
 
-interface UserData {
-    email: string;
-    password: string;
-    firm: string;
-    userType: 'customer' | 'supplier';
-    address: string;
-}
+
+const initialUserData: RegisterFormData = {
+    email: '',
+    password: '',
+    repeatPassword: '',
+    firm: '',
+    userType: '',
+    address: '',
+    deadlines: {
+        d3: '',
+        d4: '',
+        d5: '',
+        d6: '',
+        d7: '',
+        d8: ''
+    }
+};
 
 export default function UserInfoPage() {
-    const initialUserData: UserData = {
-        email: 'user@example.com',
-        password: '********',
-        firm: 'ABC Corporation',
-        userType: 'customer',
-        address: '123 Main St, Cityville',
-    };
 
-    const [userData, setUserData] = useState<UserData>(initialUserData);
-    const [isEditing, setIsEditing] = useState(false);
+    const [userData, setUserData] = useState(initialUserData);
+    const [isCustomer, setIsCustomer] = useState(false);
+    const { data, isFetching, isSuccess } = useGetUserInfoQuery([]);
+    const [disabled, setDisabled] = useState(false);
+
+    useEffect(() => {
+        if (isSuccess) {
+            setUserData(state => ({ ...state, ...data }));
+
+            if (data.userType === 'customer') {
+                setIsCustomer(true);
+            }
+        }
+
+    }, [data, isSuccess]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setUserData({
             ...userData,
             [name]: value,
+            deadlines: { ...userData.deadlines, [name]: value }
         });
-    };
-
-    const handleEditToggle = () => {
-        setIsEditing((prevIsEditing) => !prevIsEditing);
     };
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        if (isEditing) {
             // Add your update user logic here, using userData
             console.log('User information updated:', userData);
-        }
-        setIsEditing(false);
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center text-central profile">
-            <div className="w-full max-w-md p-4">
-                <h2 className="text-2xl font-semibold text-center text-central mb-4">User Information</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label htmlFor="email" className="block font-medium">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={userData.email}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                            readOnly={!isEditing}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="firm" className="block font-medium">
-                            Firm
-                        </label>
-                        <input
-                            type="text"
-                            id="firm"
-                            name="firm"
-                            value={userData.firm}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                            readOnly={!isEditing}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="userType" className="block font-medium">
-                            User Type
-                        </label>
-                        <select
-                            id="userType"
-                            name="userType"
-                            value={userData.userType}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                            disabled
-                            required
-                        >
-                            <option value="customer" disabled>
-                                Customer
-                            </option>
-                            <option value="supplier" disabled>
-                                Supplier
-                            </option>
-                        </select>
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="address" className="block font-medium">
-                            Address
-                        </label>
-                        <textarea
-                            id="address"
-                            name="address"
-                            value={userData.address}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded focus:outline-none"
-                            rows={4}
-                            readOnly={!isEditing}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        {isEditing ? (
-                            <>
+        <>
+            {isFetching ? <Spinner /> :
+                <div className="min-h-screen flex items-center justify-center text-central profile">
+                    <div className="w-full max-w-md p-4">
+                        <h2 className="text-2xl font-semibold text-center text-central mb-4">User Information</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-4">
+                                <label htmlFor="email" className="block font-medium">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={userData.email}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                    disabled={true}
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="firm" className="block font-medium">
+                                    Firm
+                                </label>
+                                <input
+                                    type="text"
+                                    id="firm"
+                                    name="firm"
+                                    value={userData.firm}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="userType" className="block font-medium">
+                                    User Type
+                                </label>
+                                <select
+                                    id="userType"
+                                    name="userType"
+                                    value={userData.userType}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                    required
+                                >
+                                    <option value="customer">
+                                        Customer
+                                    </option>
+                                    <option value="supplier">
+                                        Supplier
+                                    </option>
+                                </select>
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="address" className="block font-medium">
+                                    Address
+                                </label>
+                                <textarea
+                                    id="address"
+                                    name="address"
+                                    value={userData.address}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border border-gray-300 rounded focus:outline-none"
+                                    rows={4}
+                                    required
+                                />
+                            </div>
+
+                            {isCustomer && <Deadlines formData={userData} handleDisabled={setDisabled} handleInputChange={handleInputChange} />}
+                            <div className="mb-4">
                                 <button
                                     type="submit"
                                     className="w-full text-white p-2 rounded"
                                 >
                                     Save Changes
                                 </button>
-                                <button
-                                    key={'cancel-edit'}
-                                    type="button"
-                                    className="w-full  text-white p-2 rounded mt-2"
-                                    onClick={handleEditToggle}
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        ) : (
-                            <button
-                                key={'toggle-edit'}
-                                type="button"
-                                className="w-full text-white p-2 rounded"
-                                onClick={handleEditToggle}
-                            >
-                                Edit Credentials
-                            </button>
-                        )}
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-        </div>
+                </div>}
+        </>
     );
 }

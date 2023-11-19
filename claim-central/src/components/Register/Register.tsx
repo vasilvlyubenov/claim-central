@@ -17,12 +17,14 @@ const initialState: RegisterFormData = {
   firm: '',
   userType: '',
   address: '',
-  d3: '',
-  d4: '',
-  d5: '',
-  d6: '',
-  d7: '',
-  d8: '',
+  deadlines: {
+    d3: '',
+    d4: '',
+    d5: '',
+    d6: '',
+    d7: '',
+    d8: ''
+  }
 };
 
 const initialErrorsState = {
@@ -69,8 +71,9 @@ export default function Register() {
     }
 
     setFormData({
-      ...formData,
-      [name]: value,
+      ...formData, [name]: value,
+      deadlines: {...formData.deadlines, [name]: value},
+      
     });
   };
 
