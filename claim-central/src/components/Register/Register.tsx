@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import './Register.css';
 import { RegisterFormData } from '../../types/RegisterFormData';
-import Deadlines from './Deadlines/Deadlines';
+import Deadlines from '../Deadlines/Deadlines';
 import { HandleInputChange } from 'types/HandleInputChange';
 import Spinner from 'components/common/Spinner/Spinner';
 import { validatePassword } from './../../utils/helpers';
@@ -109,7 +109,7 @@ export default function Register() {
 
   const validateFirmHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === '') {
-      setErrors(state => ({ ...state, firm: 'Field is required' }));
+      setErrors(state => ({ ...state, firm: 'Firm is required' }));
       setDisabled(true);
     } else {
       setErrors(state => ({ ...state, firm: '' }));
@@ -119,7 +119,7 @@ export default function Register() {
 
   const validateTypeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value === '') {
-      setErrors(state => ({ ...state, userType: 'Field is required' }));
+      setErrors(state => ({ ...state, userType: 'User type is required' }));
       setDisabled(true);
     } else {
       setErrors(state => ({ ...state, userType: '' }));
@@ -130,7 +130,7 @@ export default function Register() {
   const validateAddresHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 
     if (e.target.value === '') {
-      setErrors(state => ({ ...state, address: 'Field is required' }));
+      setErrors(state => ({ ...state, address: 'Address is required' }));
       setDisabled(true);
     } else {
       setErrors(state => ({ ...state, address: '' }));

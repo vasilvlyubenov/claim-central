@@ -2,7 +2,7 @@ import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import './Profile.css';
 import { useGetUserInfoQuery } from '../../features/user/userApi';
 import Spinner from 'components/common/Spinner/Spinner';
-import Deadlines from '../../components/Register/Deadlines/Deadlines';
+import Deadlines from '../Deadlines/Deadlines';
 import { RegisterFormData } from 'types/RegisterFormData';
 
 
@@ -52,7 +52,6 @@ export default function UserInfoPage() {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-            // Add your update user logic here, using userData
             console.log('User information updated:', userData);
     };
 
@@ -131,6 +130,7 @@ export default function UserInfoPage() {
                                 <button
                                     type="submit"
                                     className="w-full text-white p-2 rounded"
+                                    disabled={disabled}
                                 >
                                     Save Changes
                                 </button>

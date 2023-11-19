@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HandleInputChange } from '../../../types/HandleInputChange';
+import { HandleInputChange } from '../../types/HandleInputChange';
 import './DeadLines.css';
 import { RegisterFormData } from 'types/RegisterFormData';
 
