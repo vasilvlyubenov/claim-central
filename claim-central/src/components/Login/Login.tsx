@@ -9,7 +9,6 @@ import { setUser } from '../../features/user/userSlice';
 const loginErrorsInitalState = {
   email: '',
   password: '',
-  error: {},
 };
 
 export default function Login() {
@@ -29,13 +28,7 @@ export default function Login() {
       setSkip(true);
       dispatch(setUser({ uid: userData.uid, email: userData.email, refreshToken: userData.refreshToken, userType: userData.displayName }));
     }
-
     
-    if (error) {
-      setErrors(state => ({ ...state, error: error }));
-    } else {
-      setErrors(state => ({ ...state, error: {} }));
-    }
   }, [signSuccess, userData, dispatch, userId, error]);
 
   // Email
@@ -76,7 +69,7 @@ export default function Login() {
           <div className="w-full max-w-md p-4">
             <h2 className="text-2xl font-semibold text-center text-central mb-4">Login</h2>
             <form onSubmit={handleSubmit}>
-              {Object.keys(errors.error).length > 0 && <p className='login-error'>Try again!</p>}
+              {error?.message && <p className='login-error'>{error?.message}</p>}
               <div className="mb-4">
                 <label htmlFor="username" className="block font-medium">
                   Email

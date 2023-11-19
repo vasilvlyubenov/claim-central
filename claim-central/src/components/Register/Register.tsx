@@ -32,7 +32,6 @@ const initialErrorsState = {
   firm: '',
   userType: '',
   address: '',
-  errors: {},
 };
 
 export default function Register() {
@@ -143,7 +142,7 @@ export default function Register() {
           <div className="w-full max-w-md p-4">
             <h2 className="text-2xl font-semibold text-center text-central mb-4">Register</h2>
             <form onSubmit={handleSubmit}>
-              {Object.keys(errors.errors).length > 0 && <p className='login-error'>Try again!</p>}
+              {error?.message && <p className='login-error'>{error?.message}</p>}
               <div className="mb-4">
                 <label htmlFor="email" className="block font-medium">
                   Email

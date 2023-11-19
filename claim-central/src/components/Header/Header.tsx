@@ -119,13 +119,15 @@ export default function Example() {
                 >
                   Dashboard
                 </Link>
-                <Link
+
+
+                {user.uid && <Link
                   to="/new-claim"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
                   onClick={handleCloseMobileMenu}
                 >
                   New claim
-                </Link>
+                </Link>}
 
               </div>
 

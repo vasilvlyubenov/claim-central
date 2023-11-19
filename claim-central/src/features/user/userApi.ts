@@ -33,11 +33,12 @@ export const userApi = firebaseApi.injectEndpoints({
                 try {
                     const response = await createUserWithEmailAndPassword(auth, input.email, input.password);
                     const result = response.user;
-                    
+
                     await updateProfile(result, { displayName: input.userType });
 
                     const users = doc(db, 'users', result.uid);
                     await setDoc(users, {
+                        email: input.email,
                         userId: result.uid,
                         firm: input.firm,
                         userType: input.userType,
@@ -118,7 +119,29 @@ export const userApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        updatePasword: builder.mutation({
+            async queryFn(password: string) {
+                try {
+                    const user = auth.currentUser;
+                    if (user) {
+                        await updatePassword(user, password);
+                    }
+
+                    return { data: 'Password updated successfully.' };
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
     }),
 });
 
-export const { useUserSignInQuery, useUserSignUpMutation, useUserSignOutQuery, useUserUpdatePasswordQuery, useGetUserInfoQuery, useGetAllSuppliersQuery } = userApi;
+export const {
+    useUserSignInQuery,
+    useUserSignUpMutation,
+    useUserSignOutQuery,
+    useUserUpdatePasswordQuery,
+    useGetUserInfoQuery,
+    useGetAllSuppliersQuery,
+    useUpdatePaswordMutation,
+} = userApi;
