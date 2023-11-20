@@ -25,3 +25,7 @@
     border: 1px solid red;
     text-align: left;
 }
+
+.profile-success {
+    color: #31b031;
+}

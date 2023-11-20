@@ -152,7 +152,7 @@ export const userApi = firebaseApi.injectEndpoints({
                         await updateProfile(user, {displayName: data.userType});
                     }
 
-                    return { data: 'Success' };
+                    return { data: 'Profile is updated successfully.' };
                 } catch (error) {
                     return { error };
                 }

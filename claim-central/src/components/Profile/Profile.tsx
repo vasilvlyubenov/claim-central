@@ -28,20 +28,24 @@ export default function UserInfoPage() {
 
     const [userData, setUserData] = useState(initialUserData);
     const [isCustomer, setIsCustomer] = useState(false);
-    const { data: inputData, isFetching, isSuccess: inputSuccess, error: inputDataError } = useGetUserInfoQuery([]);
     const [disabled, setDisabled] = useState(false);
-    const [updateUser, { error, isLoading }] = useUpdateUserDataMutation();
+    const { data: inputData, isFetching, isSuccess: inputSuccess, error: inputDataError, refetch } = useGetUserInfoQuery([]);
+    const [updateUser, {data, error, isLoading, isSuccess }] = useUpdateUserDataMutation();
 
     useEffect(() => {
         if (inputSuccess) {
             setUserData(state => ({ ...state, ...inputData }));
 
-            if (inputData.userType === 'customer') {
+            if (inputData?.userType === 'customer') {
                 setIsCustomer(true);
             }
         }
 
-    }, [inputData, inputSuccess]);
+        if (isSuccess) {
+            refetch();
+        }
+
+    }, [inputData, inputSuccess, isSuccess]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -56,7 +60,6 @@ export default function UserInfoPage() {
         e.preventDefault();
 
         updateUser(userData);
-        console.log('User information updated:', userData);
     };
 
     return (
@@ -65,9 +68,10 @@ export default function UserInfoPage() {
                 <div className="min-h-screen flex items-center justify-center text-central profile">
                     <div className="w-full max-w-md p-4">
                         <h2 className="text-2xl font-semibold text-center text-central mb-4">User Information</h2>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit}>  
                             {(inputDataError as FirebaseError)?.message && <p className='profile-error'>{(inputDataError as FirebaseError)?.message}</p>}
                             {(error as FirebaseError)?.message && <p className='profile-error'>{(error as FirebaseError)?.message}</p>}
+                            {data && <p className='profile-success'>{data}</p>}
                             <div className="mb-4">
                                 <label htmlFor="email" className="block font-medium">
                                     Email
