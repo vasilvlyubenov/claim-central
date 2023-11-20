@@ -8,9 +8,10 @@ import {
     User
 } from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
-import { collection, doc, DocumentData, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { collection, doc, DocumentData, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { UserLogin } from '../../types/UserLogin';
 import { RegisterFormData } from '../../types/RegisterFormData';
+import { UserData } from '../../types/UserData';
 
 
 export const userApi = firebaseApi.injectEndpoints({
@@ -98,6 +99,7 @@ export const userApi = firebaseApi.injectEndpoints({
 
                     return { data: {} };
                 } catch (error) {
+                    console.error(error);
                     return { error: error };
                 }
             }
@@ -119,6 +121,7 @@ export const userApi = firebaseApi.injectEndpoints({
 
                     return { data: data };
                 } catch (error) {
+                    console.error(error);
                     return { error: error };
                 }
             }
@@ -132,6 +135,24 @@ export const userApi = firebaseApi.injectEndpoints({
                     }
 
                     return { data: 'Password updated successfully.' };
+                } catch (error) {
+                    console.error(error);
+                    return { error };
+                }
+            }
+        }),
+        UpdateUserData: builder.mutation({
+            async queryFn(data: UserData) {
+                try {
+                    const user = auth.currentUser;
+
+                    if (user) {
+                        const userRef = doc(db, 'users', user?.uid);
+                        await updateDoc(userRef, data);
+                        await updateProfile(user, {displayName: data.userType});
+                    }
+
+                    return { data: 'Success' };
                 } catch (error) {
                     return { error };
                 }
@@ -148,4 +169,5 @@ export const {
     useGetUserInfoQuery,
     useGetAllSuppliersQuery,
     useUpdatePaswordMutation,
+    useUpdateUserDataMutation,
 } = userApi;

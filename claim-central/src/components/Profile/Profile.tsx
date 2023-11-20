@@ -1,9 +1,10 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import './Profile.css';
-import { useGetUserInfoQuery } from '../../features/user/userApi';
+import { useGetUserInfoQuery, useUpdateUserDataMutation } from '../../features/user/userApi';
 import Spinner from 'components/common/Spinner/Spinner';
 import Deadlines from '../Deadlines/Deadlines';
 import { RegisterFormData } from 'types/RegisterFormData';
+import { FirebaseError } from 'firebase/app';
 
 
 const initialUserData: RegisterFormData = {
@@ -27,19 +28,20 @@ export default function UserInfoPage() {
 
     const [userData, setUserData] = useState(initialUserData);
     const [isCustomer, setIsCustomer] = useState(false);
-    const { data, isFetching, isSuccess } = useGetUserInfoQuery([]);
+    const { data: inputData, isFetching, isSuccess: inputSuccess, error: inputDataError } = useGetUserInfoQuery([]);
     const [disabled, setDisabled] = useState(false);
+    const [updateUser, { error, isLoading }] = useUpdateUserDataMutation();
 
     useEffect(() => {
-        if (isSuccess) {
-            setUserData(state => ({ ...state, ...data }));
+        if (inputSuccess) {
+            setUserData(state => ({ ...state, ...inputData }));
 
-            if (data.userType === 'customer') {
+            if (inputData.userType === 'customer') {
                 setIsCustomer(true);
             }
         }
 
-    }, [data, isSuccess]);
+    }, [inputData, inputSuccess]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -52,16 +54,20 @@ export default function UserInfoPage() {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-            console.log('User information updated:', userData);
+
+        updateUser(userData);
+        console.log('User information updated:', userData);
     };
 
     return (
         <>
-            {isFetching ? <Spinner /> :
+            {isFetching || isLoading ? <Spinner /> :
                 <div className="min-h-screen flex items-center justify-center text-central profile">
                     <div className="w-full max-w-md p-4">
                         <h2 className="text-2xl font-semibold text-center text-central mb-4">User Information</h2>
                         <form onSubmit={handleSubmit}>
+                            {(inputDataError as FirebaseError)?.message && <p className='profile-error'>{(inputDataError as FirebaseError)?.message}</p>}
+                            {(error as FirebaseError)?.message && <p className='profile-error'>{(error as FirebaseError)?.message}</p>}
                             <div className="mb-4">
                                 <label htmlFor="email" className="block font-medium">
                                     Email

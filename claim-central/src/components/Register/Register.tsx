@@ -9,6 +9,7 @@ import { validateEmail } from './../../utils/helpers';
 import { useUserSignUpMutation } from '../../features/user/userApi';
 import { useAppDispatch } from '../../app/hooks';
 import { setUser } from '../../features/user/userSlice';
+import { FirebaseError } from 'firebase/app';
 
 const initialState: RegisterFormData = {
   email: '',
@@ -145,7 +146,7 @@ export default function Register() {
           <div className="w-full max-w-md p-4">
             <h2 className="text-2xl font-semibold text-center text-central mb-4">Register</h2>
             <form onSubmit={handleSubmit}>
-              {error?.message && <p className='login-error'>{error?.message}</p>}
+              {(error as FirebaseError)?.message && <p className='reg-error'>{(error as FirebaseError)?.message}</p>}
               <div className="mb-4">
                 <label htmlFor="email" className="block font-medium">
                   Email

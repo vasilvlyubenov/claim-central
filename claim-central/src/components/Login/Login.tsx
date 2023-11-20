@@ -5,6 +5,7 @@ import Spinner from 'components/common/Spinner/Spinner';
 import { useUserSignInQuery } from '../../features/user/userApi';
 import { useAppDispatch } from '../../app/hooks';
 import { setUser } from '../../features/user/userSlice';
+import { FirebaseError } from 'firebase/app';
 
 const loginErrorsInitalState = {
   email: '',
@@ -69,7 +70,7 @@ export default function Login() {
           <div className="w-full max-w-md p-4">
             <h2 className="text-2xl font-semibold text-center text-central mb-4">Login</h2>
             <form onSubmit={handleSubmit}>
-              {error?.message && <p className='login-error'>{error?.message}</p>}
+              {(error as FirebaseError)?.message && <p className='login-error'>{(error as FirebaseError)?.message}</p>}
               <div className="mb-4">
                 <label htmlFor="username" className="block font-medium">
                   Email

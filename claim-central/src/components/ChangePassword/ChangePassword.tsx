@@ -2,6 +2,7 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import './ChangePassword.css';
 import { validatePassword } from '../../utils/helpers';
 import { useUpdatePaswordMutation } from '../../features/user/userApi';
+import { FirebaseError } from 'firebase/app';
 
 const initialState = {
   newPassword: '',
@@ -17,7 +18,7 @@ export default function ChangePassword() {
   const [changePasswordData, setChangePasswordData] = useState(initialState);
   const [errors, setError] = useState(initialErrorState);
   const [disabled, setDisabled] = useState(false);
-  const [updatePassword, { data, isSuccess }] = useUpdatePaswordMutation();
+  const [updatePassword, { data, isSuccess, error }] = useUpdatePaswordMutation();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -60,6 +61,7 @@ export default function ChangePassword() {
         <h2 className="text-2xl font-semibold text-center mb-4">Change Password</h2>
         {isSuccess && <p className='passSuccess'>{data}</p>}
         <form onSubmit={handleSubmit}>
+        {(error as FirebaseError)?.message && <p className='change-error'>{(error as FirebaseError)?.message}</p>}
           <div className="mb-4">
             <label htmlFor="newPassword" className="block font-medium">
               New Password
