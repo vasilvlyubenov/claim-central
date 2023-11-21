@@ -5,7 +5,6 @@ import { Outlet, Navigate, useLocation } from 'react-router-dom';
 export default function AuthComponent(props: { allowedRole: string }) {
     const user = useAppSelector(state => state.user);
     const location = useLocation();
-    console.log(user);
 
     if (props.allowedRole === '') {
         return (

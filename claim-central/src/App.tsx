@@ -52,7 +52,7 @@ function App() {
 
           <Route element={<AuthComponent allowedRole='customer' />}>
             <Route path='/new-claim' element={<NewClaim />} />
-            <Route path='/open-claim' element={<OpenCLaim />} />
+            <Route path='/open-claim/:supplierId' element={<OpenCLaim />} />
           </Route>
 
         </Routes>
