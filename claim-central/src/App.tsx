@@ -1,23 +1,24 @@
-import { Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './config/firebase';
+
+import { useAppDispatch } from './app/hooks';
+import { setUser } from './features/user/userSlice';
+
 import './App.css';
+
 import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import Login from 'components/Login/Login';
 import Register from 'components/Register/Register';
 import Profile from 'components/Profile/Profile';
 import ChangePassword from 'components/ChangePassword/ChangePassword';
-import { ProtectedRouteProps } from 'types/ProtectedRouteProps';
-import { useAppDispatch, useAppSelector } from './app/hooks';
-import AuthRouteGuard from './guards/AuthRouteGuard';
-import LoggedInRouteGuard from './guards/LoggedInRouteGuard';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './config/firebase';
-import { setUser } from './features/user/userSlice';
 import NewClaim from 'components/NewClaim/NewClaim';
+import AuthComponent from 'components/AuthComponent/AuthComponent';
+import OpenCLaim from 'components/OpenClaim/OpenClaim';
 
 function App() {
-  const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -31,9 +32,6 @@ function App() {
     });
   }, [dispatch]);
 
-  const protectedRouteProps: Omit<ProtectedRouteProps, 'component'> = {
-    isAuth: !!user.uid,
-  };
 
   return (
     <>
@@ -41,11 +39,22 @@ function App() {
       <div className='content'>
         <Routes>
           <Route path='/' />
-          <Route path='/login' element={<LoggedInRouteGuard {...protectedRouteProps} component={<Login />} />} />
-          <Route path='/register' element={<LoggedInRouteGuard {...protectedRouteProps} component={<Register />} />} />
-          <Route path='/profile' element={<AuthRouteGuard {...protectedRouteProps} component={<Profile />} />} />
-          <Route path='/change-password' element={<AuthRouteGuard {...protectedRouteProps} component={<ChangePassword />} />} />
-          <Route path='/new-claim' element={<AuthRouteGuard {...protectedRouteProps} component={<NewClaim />} />} />
+
+          <Route element={<AuthComponent allowedRole='' />}>
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+          </Route>
+
+          <Route element={<AuthComponent allowedRole='user' />}>
+            <Route path='/profile' element={<Profile />} />
+            <Route path='/change-password' element={<ChangePassword />} />
+          </Route>
+
+          <Route element={<AuthComponent allowedRole='customer' />}>
+            <Route path='/new-claim' element={<NewClaim />} />
+            <Route path='/open-claim' element={<OpenCLaim />} />
+          </Route>
+
         </Routes>
       </div>
       <Footer />

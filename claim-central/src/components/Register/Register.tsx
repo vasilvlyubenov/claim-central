@@ -1,15 +1,18 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
-import './Register.css';
+import { FirebaseError } from 'firebase/app';
+
 import { RegisterFormData } from '../../types/RegisterFormData';
-import Deadlines from '../Deadlines/Deadlines';
 import { HandleInputChange } from 'types/HandleInputChange';
-import Spinner from 'components/common/Spinner/Spinner';
 import { validatePassword } from './../../utils/helpers';
 import { validateEmail } from './../../utils/helpers';
 import { useUserSignUpMutation } from '../../features/user/userApi';
 import { useAppDispatch } from '../../app/hooks';
 import { setUser } from '../../features/user/userSlice';
-import { FirebaseError } from 'firebase/app';
+
+import Spinner from 'components/common/Spinner/Spinner';
+import Deadlines from '../Deadlines/Deadlines';
+
+import './Register.css';
 
 const initialState: RegisterFormData = {
   email: '',

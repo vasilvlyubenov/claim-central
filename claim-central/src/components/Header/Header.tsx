@@ -7,15 +7,18 @@ import {
   UserCircleIcon,
   PencilSquareIcon
 } from '@heroicons/react/24/outline';
+
 import { useUserSignOutQuery } from '../../features/user/userApi';
 import { logout } from '../../features/user/userSlice';
-import './Header.css';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { UserLink } from '../../types/UserLink';
+
 import UserNavPopover from './NavLinks/UserNavPopover';
 import GuestPopover from './NavLinks/GuestNavPopover';
 import UserNavDisclosure from './NavLinks/UserNavDisclosure';
 import GuestNavDisclosure from './NavLinks/GuestNavDisclosure';
+
+import './Header.css';
 
 
 const userLinks: UserLink[] = [
@@ -28,7 +31,7 @@ const userLinks: UserLink[] = [
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [skip, setSkip] = useState(true);
-  const { error, isSuccess } = useUserSignOutQuery(null, { skip });
+  const { error } = useUserSignOutQuery(null, { skip });
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
 
@@ -38,10 +41,6 @@ export default function Example() {
 
     if (error) {
       console.error(error);
-    }
-
-    if (isSuccess) {
-      setSkip(true);
     }
   };
 

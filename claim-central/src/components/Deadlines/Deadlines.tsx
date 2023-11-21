@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+
 import { HandleInputChange } from '../../types/HandleInputChange';
-import './DeadLines.css';
 import { RegisterFormData } from 'types/RegisterFormData';
+
+import './DeadLines.css';
 
 export default function Deadlines(props: {
     formData: RegisterFormData

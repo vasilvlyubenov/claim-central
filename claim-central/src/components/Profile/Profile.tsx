@@ -1,10 +1,13 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
-import './Profile.css';
+import { FirebaseError } from 'firebase/app';
+
 import { useGetUserInfoQuery, useUpdateUserDataMutation } from '../../features/user/userApi';
+import { RegisterFormData } from 'types/RegisterFormData';
+
 import Spinner from 'components/common/Spinner/Spinner';
 import Deadlines from '../Deadlines/Deadlines';
-import { RegisterFormData } from 'types/RegisterFormData';
-import { FirebaseError } from 'firebase/app';
+
+import './Profile.css';
 
 
 const initialUserData: RegisterFormData = {
@@ -33,6 +36,10 @@ export default function UserInfoPage() {
     const [updateUser, {data, error, isLoading, isSuccess }] = useUpdateUserDataMutation();
 
     useEffect(() => {
+        refetch();
+    }, [refetch]);
+
+    useEffect(() => {
         if (inputSuccess) {
             setUserData(state => ({ ...state, ...inputData }));
 
@@ -45,7 +52,7 @@ export default function UserInfoPage() {
             refetch();
         }
 
-    }, [inputData, inputSuccess, isSuccess]);
+    }, [inputData, inputSuccess, isSuccess, refetch]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;

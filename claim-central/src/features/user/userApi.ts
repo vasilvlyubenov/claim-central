@@ -9,6 +9,7 @@ import {
 } from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
 import { collection, doc, DocumentData, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
+
 import { UserLogin } from '../../types/UserLogin';
 import { RegisterFormData } from '../../types/RegisterFormData';
 import { UserData } from '../../types/UserData';

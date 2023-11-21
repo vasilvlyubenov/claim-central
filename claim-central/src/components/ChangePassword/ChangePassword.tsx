@@ -1,8 +1,10 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import './ChangePassword.css';
+
 import { validatePassword } from '../../utils/helpers';
 import { useUpdatePaswordMutation } from '../../features/user/userApi';
 import { FirebaseError } from 'firebase/app';
+
+import './ChangePassword.css';
 
 const initialState = {
   newPassword: '',
