@@ -2,10 +2,12 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import './OpenClaim.css';
+import { OpenClaim } from '../../types/OpenClaim';
 
-const initialState = {
+
+const initialState: OpenClaim = {
     issueDescription: '',
-    file: FileList,
+    file: null,
 };
 
 export default function OpenCLaim() {
