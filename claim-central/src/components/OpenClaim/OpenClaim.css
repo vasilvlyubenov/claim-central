@@ -1,5 +1,6 @@
 .claim textarea {
     min-height: 10em;
+    color: #000;
 }
 
 .claim button {
