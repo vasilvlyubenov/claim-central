@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FirebaseError } from 'firebase/app';
 
 import './OpenClaim.css';
 
@@ -17,9 +18,9 @@ const initialState: OpenClaimSubmit = {
 
 export default function OpenClaim() {
     const { supplierId } = useParams();
-    const [error, setError] = useState('');
+    const [err, setError] = useState('');
     const navigate = useNavigate();
-    const [openClaim, { isLoading, isSuccess }] = useOpenClaimMutation();
+    const [openClaim, { isLoading, isSuccess, error }] = useOpenClaimMutation();
 
     const [formData, setFormData] = useState(initialState);
 
@@ -39,13 +40,7 @@ export default function OpenClaim() {
     };
 
     const handleFieldsData = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-
-        if (name=== 'subject') {
-            if (value=== '') {
-                setError('Field is required!');
-            }
-        }
+        const { name, value } = e.target;
         setFormData({ ...formData, [name]: value, });
     };
 
@@ -55,21 +50,32 @@ export default function OpenClaim() {
         setFormData({ ...formData, file: selectedFile });
     };
 
+    const validateSubject = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value === '') {
+            setError('Field is required!');
+        } else {
+            setError('');
+        }
+    };
+
     return (
         <> {isLoading ? <Spinner /> :
             <div className="min-h-screen flex items-center justify-center text-central claim">
                 <div className='w-full max-w-md p-4'>
                     <h2 className="text-2xl font-semibold text-center text-central mb-4">Initiate 8D Report</h2>
                     <form onSubmit={handleFormSubmit} className="space-y-4">
+                        {(error as FirebaseError)?.message && <p className='claim-error'>{(error as FirebaseError)?.message}</p>}
+
                         <div>
                             <label className="block font-medium" htmlFor='subject'>Subject</label>
                             <input
                                 name='subject'
                                 value={formData.subject}
                                 onChange={handleFieldsData}
+                                onBlur={validateSubject}
                                 className="mt-1 p-2 border rounded-md w-full"
                             />
-                        {error&& (<p className='open-error'>{error}</p>)}
+                            {err && (<p className='open-error'>{err}</p>)}
 
                         </div>
                         <div>

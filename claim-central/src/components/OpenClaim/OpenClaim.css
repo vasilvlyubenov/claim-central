@@ -3,6 +3,10 @@
     color: #000;
 }
 
+.claim input {
+    color: #000;
+}
+
 .claim button {
     background-color: #984e1e;
     font-weight: 600;
@@ -23,6 +27,8 @@
     text-align: left;
 }
 
-.claim input:focus, .claim select:focus, .claim textarea:focus  {
+.claim input:focus,
+.claim select:focus,
+.claim textarea:focus {
     outline: 2px solid #984e1e;
 }

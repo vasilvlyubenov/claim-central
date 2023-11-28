@@ -1,6 +1,6 @@
 import { firebaseApi } from '../../app/firebaseApi';
 import { storage, db, auth } from '../../config/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { DocumentData, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 
 import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
 import { ref, uploadBytes } from 'firebase/storage';
@@ -45,7 +45,39 @@ export const claimApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        supplierClaims: builder.query({
+            async queryFn() {
+                try {
+                    const supplierId = auth.currentUser?.uid;
+
+                    const q = query(collection(db, 'claims'), where('supplierId', '==', supplierId));
+                    const querrySnapshot = await getDocs(q);
+                    const claims: DocumentData[] = [];
+                    
+                    querrySnapshot.forEach(doc => {
+                        const line = doc.data();
+                        
+                        const converted = {...line, dateOpen: (new Date(line.dateOpen.seconds * 1000 + line.dateOpen.nanoseconds / 1000000)).toDateString()};
+                        claims.push(converted);
+                    });
+                    
+                    const customerQ = query(collection(db, 'users'), where('userType', '==', 'customer'));
+                    const customerSnapShot = await getDocs(customerQ);
+
+                    const customers: DocumentData[] = [];
+
+                    customerSnapShot.forEach(cust => {
+                        const customer = cust.data();
+                        customers.push(customer);
+                    });
+
+                    return { data: {claims, customers} };
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
     })
 });
 
-export const { useOpenClaimMutation } = claimApi;
+export const { useOpenClaimMutation, useSupplierClaimsQuery } = claimApi;
