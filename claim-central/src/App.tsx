@@ -16,7 +16,8 @@ import Profile from 'components/Profile/Profile';
 import ChangePassword from 'components/ChangePassword/ChangePassword';
 import NewClaim from 'components/NewClaim/NewClaim';
 import AuthComponent from 'components/AuthComponent/AuthComponent';
-import OpenCLaim from 'components/OpenClaim/OpenClaim';
+import OpenClaim from 'components/OpenClaim/OpenClaim';
+import SupplierOpenClaims from 'components/SupplierOpenClaims/SupplierOpenClaims';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -52,11 +53,11 @@ function App() {
 
           <Route element={<AuthComponent allowedRole='customer' />}>
             <Route path='/new-claim' element={<NewClaim />} />
-            <Route path='/open-claim/:supplierId' element={<OpenCLaim />} />
+            <Route path='/open-claim/:supplierId' element={<OpenClaim />} />
           </Route>
 
           <Route element={<AuthComponent allowedRole='supplier' />}>
-            <Route path='/open-claims' element={<OpenCLaim />} />
+            <Route path='/open-claims' element={<SupplierOpenClaims />} />
           </Route>
 
         </Routes>

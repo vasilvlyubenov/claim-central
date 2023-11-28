@@ -22,3 +22,7 @@
     border: 1px solid red;
     text-align: left;
 }
+
+.claim input:focus, .claim select:focus, .claim textarea:focus  {
+    outline: 2px solid #984e1e;
+}

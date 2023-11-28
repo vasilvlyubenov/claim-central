@@ -3,19 +3,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import './OpenClaim.css';
 
-import { OpenClaim } from '../../types/OpenClaim';
+import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
 import { useOpenClaimMutation } from '../../features/claim/claimApi';
 import Spinner from 'components/common/Spinner/Spinner';
 
 
-const initialState: OpenClaim = {
+const initialState: OpenClaimSubmit = {
+    subject: '',
     issueDescription: '',
     file: null,
     supplierId: '',
 };
 
-export default function OpenCLaim() {
+export default function OpenClaim() {
     const { supplierId } = useParams();
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const [openClaim, { isLoading, isSuccess }] = useOpenClaimMutation();
 
@@ -36,6 +38,17 @@ export default function OpenCLaim() {
         openClaim(formData);
     };
 
+    const handleFieldsData = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const {name, value} = e.target;
+
+        if (name=== 'subject') {
+            if (value=== '') {
+                setError('Field is required!');
+            }
+        }
+        setFormData({ ...formData, [name]: value, });
+    };
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files;
 
@@ -49,11 +62,22 @@ export default function OpenCLaim() {
                     <h2 className="text-2xl font-semibold text-center text-central mb-4">Initiate 8D Report</h2>
                     <form onSubmit={handleFormSubmit} className="space-y-4">
                         <div>
+                            <label className="block font-medium" htmlFor='subject'>Subject</label>
+                            <input
+                                name='subject'
+                                value={formData.subject}
+                                onChange={handleFieldsData}
+                                className="mt-1 p-2 border rounded-md w-full"
+                            />
+                        {error&& (<p className='open-error'>{error}</p>)}
+
+                        </div>
+                        <div>
                             <label className="block font-medium" htmlFor='issueDescription'>Issue Description</label>
                             <textarea
                                 name='issueDescription'
                                 value={formData.issueDescription}
-                                onChange={(e) => setFormData({ ...formData, issueDescription: e.target.value })}
+                                onChange={handleFieldsData}
                                 className="mt-1 p-2 border rounded-md w-full"
                             />
                         </div>

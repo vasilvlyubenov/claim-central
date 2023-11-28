@@ -1,8 +1,8 @@
 import { firebaseApi } from '../../app/firebaseApi';
-import { storage, db } from '../../config/firebase';
+import { storage, db, auth } from '../../config/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 
-import { OpenClaim } from '../../types/OpenClaim';
+import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
 import { ref, uploadBytes } from 'firebase/storage';
 import { generateFileName } from '../../utils/helpers';
 
@@ -10,7 +10,7 @@ import { generateFileName } from '../../utils/helpers';
 export const claimApi = firebaseApi.injectEndpoints({
     endpoints: (builder) => ({
         openClaim: builder.mutation({
-            async queryFn(data: OpenClaim) {
+            async queryFn(data: OpenClaimSubmit) {
                 try {
                     let filePath = '';
 
@@ -22,10 +22,16 @@ export const claimApi = firebaseApi.injectEndpoints({
                         filePath = upload.metadata.fullPath;
                     }
 
+                    const date = new Date();
+
                     const docData = {
+                        subject: data.subject,
                         issueDescription: data.issueDescription,
                         supplierId: data.supplierId,
                         open: true,
+                        customerId: auth.currentUser?.uid,
+                        dateOpen: date,
+                        dateClosed: '',
                         filePath
                     };
 
