@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import './OpenClaim.css';
 
@@ -16,7 +16,8 @@ const initialState: OpenClaim = {
 
 export default function OpenCLaim() {
     const { supplierId } = useParams();
-    const [openClaim, { isLoading }] = useOpenClaimMutation();
+    const navigate = useNavigate();
+    const [openClaim, { isLoading, isSuccess }] = useOpenClaimMutation();
 
     const [formData, setFormData] = useState(initialState);
 
@@ -24,7 +25,11 @@ export default function OpenCLaim() {
         if (supplierId) {
             setFormData(state => ({ ...state, supplierId: supplierId }));
         }
-    }, [supplierId]);
+
+        if (isSuccess) {
+            navigate('/new-claim');
+        }
+    }, [supplierId, isSuccess, navigate]);
 
     const handleFormSubmit = (e: FormEvent) => {
         e.preventDefault();

@@ -3,12 +3,12 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { LogoutFunction } from 'types/LogoutFunction';
 import { UserLink } from 'types/UserLink';
-import {CloseMobileMenu} from '../../../types/CloseMobileMenu';
+import { CloseMobileMenu } from '../../../types/CloseMobileMenu';
 
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
-  }
+}
 
 export default function UserNavDisclosure(props: {
     userLinks: UserLink[],

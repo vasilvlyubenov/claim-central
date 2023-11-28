@@ -25,6 +25,7 @@ export const claimApi = firebaseApi.injectEndpoints({
                     const docData = {
                         issueDescription: data.issueDescription,
                         supplierId: data.supplierId,
+                        open: true,
                         filePath
                     };
 

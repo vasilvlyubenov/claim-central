@@ -55,6 +55,10 @@ function App() {
             <Route path='/open-claim/:supplierId' element={<OpenCLaim />} />
           </Route>
 
+          <Route element={<AuthComponent allowedRole='supplier' />}>
+            <Route path='/open-claims' element={<OpenCLaim />} />
+          </Route>
+
         </Routes>
       </div>
       <Footer />

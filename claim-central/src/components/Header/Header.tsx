@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Dialog, Popover } from '@headlessui/react';
 import {
@@ -31,9 +31,18 @@ const userLinks: UserLink[] = [
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [skip, setSkip] = useState(true);
+  const [isCustomer, setIsCustomer] = useState(false);
   const { error } = useUserSignOutQuery(null, { skip });
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user.userType === 'customer') {
+      setIsCustomer(true);
+    } else {
+      setIsCustomer(false);
+    }
+  }, [user]);
 
   const logoutUser = () => {
     setSkip(false);
@@ -76,7 +85,9 @@ export default function Example() {
           {user.uid && <UserNavPopover
             userLinks={userLinks}
             logout={logoutUser}
-            userEmail={user.email ?? ''} />}
+            userEmail={user.email ?? ''}
+            isCustomer={isCustomer}
+          />}
 
           {!user.uid && <GuestPopover />}
 
@@ -120,12 +131,20 @@ export default function Example() {
                 </Link>
 
 
-                {user.uid && <Link
+                {isCustomer && <Link
                   to="/new-claim"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
                   onClick={handleCloseMobileMenu}
                 >
                   New claim
+                </Link>}
+
+                {!isCustomer && <Link
+                  to="/open-claims"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
+                  onClick={handleCloseMobileMenu}
+                >
+                  Open claims
                 </Link>}
 
               </div>
