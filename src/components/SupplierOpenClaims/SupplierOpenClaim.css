@@ -25,3 +25,8 @@ p.closed {
 .underln:hover {
     text-decoration: underline;
 }
+
+p.customer-email {
+    font-size: 0.8em;
+    color: gray;
+}

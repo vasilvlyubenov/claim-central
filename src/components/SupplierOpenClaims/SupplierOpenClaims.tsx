@@ -14,15 +14,15 @@ export default function SupplierOpenClaims() {
       {isLoading ?
         <Spinner /> :
         <ul role="list" className="divide-y divide-gray-100 ">
-          {data?.claims.map((claim, i) => (
+          {data?.map((claim, i) => (
             <li key={i} className="flex justify-center gap-x-6 py-5">
               <div className="flex min-w-0 gap-x-4">
                 <div className="min-w-0 flex-auto">
-                  <Link to={`claim/${claim.uid}`} className="text-sm font-semibold leading-6 text-central underln">{claim.subject}</Link>
+                  <Link to={`claim/${claim.id}`} className="text-sm font-semibold leading-6 text-central underln">{claim.subject}</Link>
                   <p className="mt-1 truncate text-xs leading-5 text-gray-500">{claim.dateOpen}</p>
 
                   <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-center">
-                    {/* <p className="text-sm leading-6 text-gray-900 description">{claim.issueDescription}</p> */}
+                    <p className="text-sm leading-6 text-gray-900 customer-email">{claim.customerEmail}</p>
                     {claim.open ? (
                       <p className="mt-1 text-xs leading-5 text-gray-500 open">
                         Open

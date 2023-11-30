@@ -48,30 +48,38 @@ export const claimApi = firebaseApi.injectEndpoints({
         supplierClaims: builder.query({
             async queryFn() {
                 try {
+                    const customerQ = query(collection(db, 'users'), where('userType', '==', 'customer'));
+                    const customerSnapShot = await getDocs(customerQ);
+
+                    const customers: DocumentData = {};
+
+                    customerSnapShot.forEach(cust => {
+                        const customer = cust.data();
+
+                        if (!Object.prototype.hasOwnProperty.call(customers, customer.userId)) {
+                            customers[customer.userId] = customer.email;
+                        }
+                    });
+
                     const supplierId = auth.currentUser?.uid;
 
                     const q = query(collection(db, 'claims'), where('supplierId', '==', supplierId));
                     const querrySnapshot = await getDocs(q);
                     const claims: DocumentData[] = [];
-                    
+
                     querrySnapshot.forEach(doc => {
                         const line = doc.data();
-                        
-                        const converted = {...line, dateOpen: (new Date(line.dateOpen.seconds * 1000 + line.dateOpen.nanoseconds / 1000000)).toDateString()};
+
+                        const converted = {
+                            ...line,
+                            dateOpen: (new Date(line.dateOpen.seconds * 1000 + line.dateOpen.nanoseconds / 1000000)).toDateString(),
+                            id: doc.id,
+                            customerEmail: customers[line.customerId]
+                        };
                         claims.push(converted);
                     });
-                    
-                    const customerQ = query(collection(db, 'users'), where('userType', '==', 'customer'));
-                    const customerSnapShot = await getDocs(customerQ);
 
-                    const customers: DocumentData[] = [];
-
-                    customerSnapShot.forEach(cust => {
-                        const customer = cust.data();
-                        customers.push(customer);
-                    });
-
-                    return { data: {claims, customers} };
+                    return { data: claims };
                 } catch (error) {
                     return { error };
                 }
