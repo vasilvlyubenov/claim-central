@@ -7,6 +7,9 @@ import {
   UserCircleIcon,
   PencilSquareIcon
 } from '@heroicons/react/24/outline';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../config/firebase';
+import { setUser } from '../../features/user/userSlice';
 
 import { useUserSignOutQuery } from '../../features/user/userApi';
 import { logout } from '../../features/user/userSlice';
@@ -35,6 +38,18 @@ export default function Example() {
   const { error } = useUserSignOutQuery(null, { skip });
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (res) => {
+      if (res) {
+        dispatch(setUser({ uid: res.uid, email: res.email, refreshToken: res.refreshToken, userType: res.displayName }));
+      } else {
+        return null;
+      }
+      return () => unsubscribe();
+    });
+  }, [dispatch]);
+
 
   useEffect(() => {
     if (user.userType === 'customer') {

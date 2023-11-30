@@ -1,10 +1,4 @@
-import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './config/firebase';
-
-import { useAppDispatch } from './app/hooks';
-import { setUser } from './features/user/userSlice';
 
 import './App.css';
 
@@ -20,19 +14,6 @@ import OpenClaim from 'components/OpenClaim/OpenClaim';
 import SupplierOpenClaims from 'components/SupplierOpenClaims/SupplierOpenClaims';
 
 function App() {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (res) => {
-      if (res) {
-        dispatch(setUser({ uid: res.uid, email: res.email, refreshToken: res.refreshToken, userType: res.displayName }));
-      } else {
-        return null;
-      }
-      return () => unsubscribe();
-    });
-  }, [dispatch]);
-
 
   return (
     <>

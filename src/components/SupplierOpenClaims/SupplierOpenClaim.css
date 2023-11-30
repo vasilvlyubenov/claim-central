@@ -1,0 +1,27 @@
+p.open {
+    color: red;
+    font-weight: 700;
+    animation: blink-text 1.5s linear infinite;
+}
+
+@keyframes blink-text {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+p.closed {
+    color: gray;
+}
+
+.underln:hover {
+    text-decoration: underline;
+}
