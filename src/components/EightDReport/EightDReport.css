@@ -1,0 +1,31 @@
+.report textarea {
+    min-width: 8em;
+    min-height: 7em;
+    color: black;
+}
+
+.report input {
+    color: black;
+}
+
+.report textarea:focus  {
+    outline: 2px solid #984e1e;
+}
+
+.datepicker {
+    border: 1px solid gray;
+    /* background-color: rgba(157, 157, 157, 0.1); */
+}
+
+.datepicker:focus {
+    border: 2px solid #984e1e;
+}
+
+.report button {
+    background-color: #984e1e;
+    font-weight: 600;
+}
+
+.report button:active {
+    background-color: #83451b;
+}
