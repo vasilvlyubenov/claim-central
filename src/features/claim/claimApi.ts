@@ -1,9 +1,9 @@
 import { firebaseApi } from '../../app/firebaseApi';
 import { storage, db, auth } from '../../config/firebase';
-import { DocumentData, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { DocumentData, addDoc, collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { generateFileName } from '../../utils/helpers';
 
 
@@ -85,7 +85,26 @@ export const claimApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        getClaimById: builder.query({
+            async queryFn(claimId: string | undefined) {
+
+                if (!claimId) {
+                    throw Error('SOmething went wrong');
+                }
+
+                try {
+
+                    const docRef = doc(db, 'claims', claimId);
+                    const docSnap = await getDoc(docRef);
+                    const data = docSnap.data();
+
+                    return {data: {claim: data, download: getDownloadURL(ref(storage, data?.filePath))}};
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
     })
 });
 
-export const { useOpenClaimMutation, useSupplierClaimsQuery } = claimApi;
+export const { useOpenClaimMutation, useSupplierClaimsQuery, useGetClaimByIdQuery } = claimApi;
