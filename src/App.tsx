@@ -12,6 +12,7 @@ import NewClaim from 'components/NewClaim/NewClaim';
 import AuthComponent from 'components/AuthComponent/AuthComponent';
 import OpenClaim from 'components/OpenClaim/OpenClaim';
 import SupplierOpenClaims from 'components/SupplierOpenClaims/SupplierOpenClaims';
+import EightDReportPage from 'components/EightDReport/EightDReport';
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
 
           <Route element={<AuthComponent allowedRole='supplier' />}>
             <Route path='/open-claims' element={<SupplierOpenClaims />} />
+            <Route path='/report/:claimId' element={<EightDReportPage />} />
           </Route>
 
         </Routes>
