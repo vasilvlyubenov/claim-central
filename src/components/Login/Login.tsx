@@ -24,12 +24,25 @@ export default function Login() {
 
 
   useEffect(() => {
+
     if (signSuccess) {
-      setUserId(userData.uid);
+      setUserId(userData.auth.uid);
       setSkip(true);
-      dispatch(setUser({ uid: userData.uid, email: userData.email, refreshToken: userData.refreshToken, userType: userData.displayName }));
+      dispatch(setUser({
+        uid: userData.auth.uid,
+        email: userData.auth.email,
+        refreshToken: userData.auth.refreshToken,
+        userType: userData.auth.displayName,
+        deadlines: {
+          d3: userData?.info?.deadlines.d3,
+          d4: userData?.info?.deadlines.d4,
+          d5: userData?.info?.deadlines.d5,
+          d6: userData?.info?.deadlines.d6,
+          d7: userData?.info?.deadlines.d7,
+          d8: userData?.info?.deadlines.d8,
+        }
+      }));
     }
-    
   }, [signSuccess, userData, dispatch, userId, error]);
 
   // Email

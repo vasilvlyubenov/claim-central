@@ -20,10 +20,17 @@ export const userApi = firebaseApi.injectEndpoints({
         userSignIn: builder.query({
             async queryFn(input: UserLogin) {
                 try {
+                    let userInfo:DocumentData | undefined;
                     const response = await signInWithEmailAndPassword(auth, input.email, input.password);
                     const result: User = response.user;
 
-                    return { data: result };
+                    if (result) {
+                        const docRef = doc(db, 'users', result.uid);
+                        const docSnap = await getDoc(docRef);
+                        userInfo = docSnap.data();
+                    }
+                    
+                    return { data: {auth: result, info: userInfo} };
                 } catch (error) {
                     console.error(error);
                     return { error };

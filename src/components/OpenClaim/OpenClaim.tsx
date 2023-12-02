@@ -7,6 +7,7 @@ import './OpenClaim.css';
 import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
 import { useOpenClaimMutation } from '../../features/claim/claimApi';
 import Spinner from 'components/common/Spinner/Spinner';
+import { useAppSelector } from '../../app/hooks';
 
 
 const initialState: OpenClaimSubmit = {
@@ -14,6 +15,14 @@ const initialState: OpenClaimSubmit = {
     issueDescription: '',
     file: null,
     supplierId: '',
+    deadlines: {
+        d3: null,
+        d4: null,
+        d5: null,
+        d6: null,
+        d7: null,
+        d8: null,
+    }
 };
 
 export default function OpenClaim() {
@@ -21,18 +30,30 @@ export default function OpenClaim() {
     const [err, setError] = useState('');
     const navigate = useNavigate();
     const [openClaim, { isLoading, isSuccess, error }] = useOpenClaimMutation();
+    const selector = useAppSelector(selector => selector.user);
 
     const [formData, setFormData] = useState(initialState);
 
     useEffect(() => {
         if (supplierId) {
-            setFormData(state => ({ ...state, supplierId: supplierId }));
+            setFormData(state => ({
+                ...state,
+                supplierId: supplierId,
+                deadlines: {
+                    d3: selector.deadlines.d3,
+                    d4: selector.deadlines.d4,
+                    d5: selector.deadlines.d5,
+                    d6: selector.deadlines.d6,
+                    d7: selector.deadlines.d7,
+                    d8: selector.deadlines.d8,
+                }
+            }));
         }
 
         if (isSuccess) {
             navigate('/new-claim');
         }
-    }, [supplierId, isSuccess, navigate]);
+    }, [supplierId, isSuccess, navigate, selector]);
 
     const handleFormSubmit = (e: FormEvent) => {
         e.preventDefault();
