@@ -40,6 +40,9 @@ export default function EightDReportPage() {
 
     useEffect(() => {
         refetch();
+    }, [refetch]);
+
+    useEffect(() => {
 
         if (selector.userType === 'customer') {
             setIsCustomer(true);
