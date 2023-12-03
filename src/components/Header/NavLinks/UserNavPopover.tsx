@@ -21,6 +21,9 @@ export default function UserNavPopover(props: {
       {!props.isCustomer && <Link to="/open-claims" className="text-sm font-semibold leading-6 text-central">
         Open claims
       </Link>}
+      {props.isCustomer && <Link to="/customer-claims" className="text-sm font-semibold leading-6 text-central">
+        My claims
+      </Link >}
       <Popover className="relative">
         <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-central">
           {props.userEmail}

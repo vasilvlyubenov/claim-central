@@ -3,8 +3,9 @@ import { storage, db, auth } from '../../config/firebase';
 import { DocumentData, addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 
 import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
+import { TEditClaim } from '../../types/TEditClaim';
 import { EightDReport } from '../../types/EightDReport';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { calculateDeadline, generateFileName } from '../../utils/helpers';
 
 
@@ -167,7 +168,6 @@ export const claimApi = firebaseApi.injectEndpoints({
             async queryFn(args: { ref: string, report: EightDReport }) {
                 try {
                     const docData = {
-                        descriptionId: args.report.descriptionId,
                         containmentActions: args.report.containmentActions,
                         rootCauseAnalysis: args.report.rootCauseAnalysis,
                         correctiveActions: args.report.correctiveActions,
@@ -188,7 +188,90 @@ export const claimApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        customerClaims: builder.query({
+            async queryFn() {
+                try {
+                    const supplierQ = query(collection(db, 'users'), where('userType', '==', 'supplier'));
+                    const supplierSnapshot = await getDocs(supplierQ);
+
+                    const suppliers: DocumentData = {};
+
+                    supplierSnapshot.forEach(supp => {
+                        const supplier = supp.data();
+
+                        if (!Object.prototype.hasOwnProperty.call(suppliers, supplier.userId)) {
+                            suppliers[supplier.userId] = supplier.email;
+                        }
+                    });
+
+                    const customerId = auth.currentUser?.uid;
+
+                    const q = query(collection(db, 'claims'), where('customerId', '==', customerId));
+                    const querrySnapshot = await getDocs(q);
+                    const claims: DocumentData[] = [];
+
+                    querrySnapshot.forEach(doc => {
+                        const line = doc.data();
+
+                        const converted = {
+                            ...line,
+                            dateOpen: (new Date(line.dateOpen.seconds * 1000 + line.dateOpen.nanoseconds / 1000000)).toDateString(),
+                            id: doc.id,
+                            supplierEmail: suppliers[line.supplierId]
+                        };
+                        claims.push(converted);
+                    });
+
+                    return { data: claims };
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
+        editClaim: builder.mutation({
+            async queryFn(data: TEditClaim) {
+                try {
+                    let filePath = '';
+
+                    if (data.file !== null) {
+                        const fileName = generateFileName(data.file[0].name);
+                        const claimsFileRef = ref(storage, `open-claims/${fileName}`);
+
+                        const upload = await uploadBytes(claimsFileRef, data.file[0]);
+                        filePath = upload.metadata.fullPath;
+                    }
+
+                    const docData = {
+                        subject: data.subject,
+                        issueDescription: data.issueDescription,
+                        filePath
+                    };
+
+                    await updateDoc(doc(db, 'claims', data.claimId), docData);
+
+                    if (data.file !== null && data.filePath !== '') {
+                        const fileRef = ref(storage, data.filePath);
+                        await deleteObject(fileRef);
+                    }
+
+
+                    return { data: 'success' };
+
+                } catch (error) {
+                    console.error(error);
+                    return { error };
+                }
+            }
+        }),
     })
 });
 
-export const { useOpenClaimMutation, useSupplierClaimsQuery, useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } = claimApi;
+export const {
+    useOpenClaimMutation,
+    useSupplierClaimsQuery,
+    useGetClaimByIdQuery,
+    useGetReportByClaimIdQuery,
+    useSaveReportMutation,
+    useCustomerClaimsQuery,
+    useEditClaimMutation
+} = claimApi;

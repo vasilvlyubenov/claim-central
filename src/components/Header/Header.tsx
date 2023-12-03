@@ -51,22 +51,22 @@ export default function Example() {
 
         if (isSuccess) {
 
-          
-            dispatch(setUser({
-              uid: res.uid,
-              email: res.email,
-              refreshToken: res.refreshToken,
-              userType: res.displayName,
-              deadlines: {
-                d3: data?.deadlines?.d3,
-                d4: data?.deadlines?.d4,
-                d5: data?.deadlines?.d5,
-                d6: data?.deadlines?.d6,
-                d7: data?.deadlines?.d7,
-                d8: data?.deadlines?.d8,
-              }
-            }));
-          
+
+          dispatch(setUser({
+            uid: res.uid,
+            email: res.email,
+            refreshToken: res.refreshToken,
+            userType: res.displayName,
+            deadlines: {
+              d3: data?.deadlines?.d3,
+              d4: data?.deadlines?.d4,
+              d5: data?.deadlines?.d5,
+              d6: data?.deadlines?.d6,
+              d7: data?.deadlines?.d7,
+              d8: data?.deadlines?.d8,
+            }
+          }));
+
 
         }
 
@@ -182,6 +182,13 @@ export default function Example() {
                 >
                   New claim
                 </Link>}
+
+                {isCustomer && <Link
+                  to="/customer-claims" className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
+                  onClick={handleCloseMobileMenu}
+                  >
+                  My claims
+                </Link >}
 
                 {!isCustomer && <Link
                   to="/open-claims"

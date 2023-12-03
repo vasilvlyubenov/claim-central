@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSupplierClaimsQuery } from '../../features/claim/claimApi';
 import { Link } from 'react-router-dom';
 
@@ -6,8 +7,11 @@ import './SupplierOpenClaim.css';
 import Spinner from 'components/common/Spinner/Spinner';
 
 export default function SupplierOpenClaims() {
-  const { data, isLoading } = useSupplierClaimsQuery([]);
+  const { data, isLoading, refetch } = useSupplierClaimsQuery([]);
 
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <>
