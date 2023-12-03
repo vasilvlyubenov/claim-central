@@ -11,7 +11,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { setUser } from '../../features/user/userSlice';
 
-import { useUserSignOutQuery } from '../../features/user/userApi';
+import { useGetUserInfoQuery, useUserSignOutQuery } from '../../features/user/userApi';
 import { logout } from '../../features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { UserLink } from '../../types/UserLink';
@@ -33,22 +33,48 @@ const userLinks: UserLink[] = [
 
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [infoSkip, setInfoSkip] = useState(true);
   const [skip, setSkip] = useState(true);
   const [isCustomer, setIsCustomer] = useState(false);
   const { error } = useUserSignOutQuery(null, { skip });
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
+  const { data, isSuccess } = useGetUserInfoQuery({
+    skip: infoSkip
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (res) => {
       if (res) {
-        dispatch(setUser({ uid: res.uid, email: res.email, refreshToken: res.refreshToken, userType: res.displayName }));
+        setInfoSkip(false);
+
+        if (isSuccess) {
+
+          if (data.deadlines) {
+            dispatch(setUser({
+              uid: res.uid,
+              email: res.email,
+              refreshToken: res.refreshToken,
+              userType: res.displayName,
+              deadlines: {
+                d3: data?.deadlines.d3,
+                d4: data?.deadlines.d4,
+                d5: data?.deadlines.d5,
+                d6: data?.deadlines.d6,
+                d7: data?.deadlines.d7,
+                d8: data?.deadlines.d8,
+              }
+            }));
+          }
+
+        }
+
       } else {
         return null;
       }
       return () => unsubscribe();
     });
-  }, [dispatch]);
+  }, [dispatch, data, isSuccess]);
 
 
   useEffect(() => {

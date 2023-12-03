@@ -7,6 +7,14 @@ const initialState = {
     email: null,
     refreshToken: null,
     userType: null,
+    deadlines: {
+        d3: null,
+        d4: null,
+        d5: null,
+        d6: null,
+        d7: null,
+        d8: null,
+    }
 };
 
 export const userSlice = createSlice({
@@ -18,12 +26,26 @@ export const userSlice = createSlice({
             state.email = action.payload.email;
             state.refreshToken = action.payload.refreshToken;
             state.userType = action.payload.userType;
+            state.deadlines = {
+                d3: action.payload.deadlines.d3,
+                d4: action.payload.deadlines.d4,
+                d5: action.payload.deadlines.d5,
+                d6: action.payload.deadlines.d6,
+                d7: action.payload.deadlines.d7,
+                d8: action.payload.deadlines.d8
+            };
         },
         logout: (state) => {
             state.uid = null;
             state.email = null;
             state.refreshToken = null;
             state.userType = null;
+            state.deadlines.d3 = null;
+            state.deadlines.d4 = null;
+            state.deadlines.d5 = null;
+            state.deadlines.d6 = null;
+            state.deadlines.d7 = null;
+            state.deadlines.d8 = null;
         }
     }
 });

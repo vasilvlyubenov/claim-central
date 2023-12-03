@@ -4,6 +4,9 @@ export type EightDReport = {
     rootCauseAnalysis: string;
     correctiveActions: string;
     correctiveActionDeadline: Date | null;
+    verifyCorrectiveActions: string;
+    verifyCorrectiveActionsDeadline: Date | null;
     preventiveActions: string;
     preventiveActionDeadline: Date | null;
+    teamRecognition: string;
 }

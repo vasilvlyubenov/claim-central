@@ -43,7 +43,7 @@ export const validatePassword = (password: string, level: number = 0) => {
     if (password === '') {
         result.type = true;
         result.message = 'Password is required';
-    } 
+    }
 
     if (level !== 0) {
         if (password.length < 6) {
@@ -53,7 +53,7 @@ export const validatePassword = (password: string, level: number = 0) => {
         } else if (!digitReg.test(password)) {
             result.type = true;
             result.message = 'Password has to have at least one digit.';
-    
+
             return result;
         }
     }
@@ -67,11 +67,42 @@ export const validatePassword = (password: string, level: number = 0) => {
  * @param currentFileName string 
  * @returns string
  */
-export const generateFileName  = (currentFileName: string) => {
+export const generateFileName = (currentFileName: string) => {
     const splitted = currentFileName.split('.');
     const fileExt = splitted[splitted.length - 1];
     const timestamp = Date.now();
     const newName = `${timestamp}.${fileExt}`;
 
     return newName;
+};
+
+/**
+ * Calculaters dates based on the customer deadlines
+ * 
+ * @param numberOfDays number 
+ * @param initial number - optional - has to be 1 when the date is for containment actions
+ * @returns Date
+ */
+export const calculateDeadline = (numberOfDays: number, initial: number = 0) => {
+    // Parse the input date string
+    const currentDate = new Date();
+
+    const dayOfWeek = currentDate.getDay();
+    
+    if (initial === 1) {
+        if (dayOfWeek === 5) {
+            currentDate.setDate(currentDate.getDate() + 3);
+            return currentDate.toISOString().split('T')[0];
+        } else if (dayOfWeek === 6) {
+            currentDate.setDate(currentDate.getDate() + 2);
+            return currentDate.toISOString().split('T')[0];
+        } else if (dayOfWeek === 0) {
+            currentDate.setDate(currentDate.getDate() + 1);
+            return currentDate.toISOString().split('T')[0];
+        }
+    }
+
+    const deadline = new Date(currentDate.getTime() + numberOfDays * 24 * 60 * 60 * 1000);
+
+    return deadline.toISOString().split('T')[0];
 };

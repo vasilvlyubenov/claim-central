@@ -14,11 +14,10 @@
 
 .datepicker {
     border: 1px solid gray;
-    /* background-color: rgba(157, 157, 157, 0.1); */
 }
 
 .datepicker:focus {
-    border: 2px solid #984e1e;
+    outline: 2px solid #984e1e;
 }
 
 .report button {
@@ -28,4 +27,31 @@
 
 .report button:active {
     background-color: #83451b;
+}
+
+.report h2 {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    color: rgb(225, 0, 0);
+}
+
+.report .download-btn {
+    color: #83451b;
+    background-color: #fff;
+    border: 1px solid #83451b;
+    padding: 0 0.5em;
+    border-radius: 1em;
+}
+
+.report .download-btn:active {
+    background-color: #fff;
+}
+
+.report .deadline {
+    color: #000;
+}
+
+.report .deadline-late {
+    color: #f00;
+    font-weight: 600;
 }

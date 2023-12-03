@@ -1,10 +1,10 @@
 import { firebaseApi } from '../../app/firebaseApi';
 import { storage, db, auth } from '../../config/firebase';
-import { DocumentData, addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { DocumentData, addDoc, collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
-import { ref, uploadBytes } from 'firebase/storage';
-import { generateFileName } from '../../utils/helpers';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { calculateDeadline, generateFileName } from '../../utils/helpers';
 
 
 export const claimApi = firebaseApi.injectEndpoints({
@@ -23,7 +23,7 @@ export const claimApi = firebaseApi.injectEndpoints({
                     }
 
                     const date = new Date();
-
+                    
                     const docData = {
                         subject: data.subject,
                         issueDescription: data.issueDescription,
@@ -32,7 +32,15 @@ export const claimApi = firebaseApi.injectEndpoints({
                         customerId: auth.currentUser?.uid,
                         dateOpen: date,
                         dateClosed: '',
-                        filePath
+                        filePath,
+                        deadlines: {
+                            d3: calculateDeadline(Number(data.deadlines.d3), 1),
+                            d4: calculateDeadline(Number(data.deadlines.d4)),
+                            d5: calculateDeadline(Number(data.deadlines.d5)),
+                            d6: calculateDeadline(Number(data.deadlines.d6)),
+                            d7: calculateDeadline(Number(data.deadlines.d7)),
+                            d8: calculateDeadline(Number(data.deadlines.d8)),
+                        }
                     };
 
                     const docRef = await addDoc(collection(db, 'claims'), docData);
@@ -85,7 +93,31 @@ export const claimApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        getClaimById: builder.query({
+            async queryFn(claimId: string | undefined) {
+                let download = null;
+
+                if (!claimId) {
+                    throw Error('Something went wrong');
+                }
+
+                try {
+
+                    const docRef = doc(db, 'claims', claimId);
+                    const docSnap = await getDoc(docRef);
+                    const data = docSnap.data();
+
+                    if (data?.filePath !== '') {
+                        download = getDownloadURL(ref(storage, data?.filePath));
+                    }
+
+                    return {data: {claim: data, download: download}};
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
     })
 });
 
-export const { useOpenClaimMutation, useSupplierClaimsQuery } = claimApi;
+export const { useOpenClaimMutation, useSupplierClaimsQuery, useGetClaimByIdQuery } = claimApi;
