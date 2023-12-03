@@ -188,7 +188,54 @@ export const claimApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        customerClaims: builder.query({
+            async queryFn() {
+                try {
+                    const supplierQ = query(collection(db, 'users'), where('userType', '==', 'supplier'));
+                    const supplierSnapshot = await getDocs(supplierQ);
+
+                    const suppliers: DocumentData = {};
+
+                    supplierSnapshot.forEach(supp => {
+                        const supplier = supp.data();
+
+                        if (!Object.prototype.hasOwnProperty.call(suppliers, supplier.userId)) {
+                            suppliers[supplier.userId] = supplier.email;
+                        }
+                    });
+                    
+                    const customerId = auth.currentUser?.uid;
+
+                    const q = query(collection(db, 'claims'), where('customerId', '==', customerId));
+                    const querrySnapshot = await getDocs(q);
+                    const claims: DocumentData[] = [];
+
+                    querrySnapshot.forEach(doc => {
+                        const line = doc.data();
+
+                        const converted = {
+                            ...line,
+                            dateOpen: (new Date(line.dateOpen.seconds * 1000 + line.dateOpen.nanoseconds / 1000000)).toDateString(),
+                            id: doc.id,
+                            supplierEmail: suppliers[line.supplierId]
+                        };
+                        claims.push(converted);
+                    });
+
+                    return { data: claims };
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
     })
 });
 
-export const { useOpenClaimMutation, useSupplierClaimsQuery, useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } = claimApi;
+export const {
+    useOpenClaimMutation,
+    useSupplierClaimsQuery,
+    useGetClaimByIdQuery,
+    useGetReportByClaimIdQuery,
+    useSaveReportMutation,
+    useCustomerClaimsQuery
+} = claimApi;

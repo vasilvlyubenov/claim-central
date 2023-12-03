@@ -1,0 +1,37 @@
+p.rep-open {
+    color: red;
+    font-weight: 700;
+    animation: blink-text 1.5s linear infinite;
+}
+
+@keyframes blink-text {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+p.rep-closed {
+    color: gray;
+}
+
+.rep-underln:hover {
+    text-decoration: underline;
+}
+
+p.supplier-email {
+    font-size: 0.8em;
+    color: gray;
+}
+
+.rep-no-claims {
+    font-size: 1.8em;
+    color: #984e1e;
+}

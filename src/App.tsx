@@ -13,6 +13,7 @@ import AuthComponent from 'components/AuthComponent/AuthComponent';
 import OpenClaim from 'components/OpenClaim/OpenClaim';
 import SupplierOpenClaims from 'components/SupplierOpenClaims/SupplierOpenClaims';
 import EightDReportPage from 'components/EightDReport/EightDReport';
+import CustomerClaims from 'components/CustomerClaims/CustomerClaims';
 
 function App() {
 
@@ -31,16 +32,17 @@ function App() {
           <Route element={<AuthComponent allowedRole='user' />}>
             <Route path='/profile' element={<Profile />} />
             <Route path='/change-password' element={<ChangePassword />} />
+            <Route path='/report/:claimId' element={<EightDReportPage />} />
           </Route>
 
           <Route element={<AuthComponent allowedRole='customer' />}>
             <Route path='/new-claim' element={<NewClaim />} />
             <Route path='/open-claim/:supplierId' element={<OpenClaim />} />
+            <Route path='/customer-claims' element={<CustomerClaims />} />
           </Route>
 
           <Route element={<AuthComponent allowedRole='supplier' />}>
             <Route path='/open-claims' element={<SupplierOpenClaims />} />
-            <Route path='/report/:claimId' element={<EightDReportPage />} />
           </Route>
 
         </Routes>

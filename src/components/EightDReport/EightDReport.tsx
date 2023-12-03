@@ -96,7 +96,7 @@ export default function EightDReportPage() {
 
     return (
         <>
-            {(isLoading && isReporLoading && isSaveReportLoading)
+            {(isLoading || isReporLoading || isSaveReportLoading)
                 ? <Spinner />
                 : <div className="max-w-3xl mx-auto mt-8 report text-central">
                     <h1 className="text-3xl font-semibold mb-4">8D Report</h1>
