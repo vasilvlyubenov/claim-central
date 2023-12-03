@@ -25,15 +25,19 @@ export default function EightDReportPage() {
     const [correctiveDate, setCorrectiveDate] = useState<Date | null>(null);
     const [preventiveDate, setPreventiveDate] = useState<Date | null>(null);
     const { claimId } = useParams();
-    const { data, isLoading } = useGetClaimByIdQuery(claimId);
+    const { data, isLoading, isSuccess } = useGetClaimByIdQuery(claimId);
 
     useEffect(() => {
+        if (isSuccess) {
+            console.log(data);
+        }
+        
         setFormData(state => ({
             ...state,
             correctiveActionDeadline: correctiveDate,
             preventiveActionDeadline: preventiveDate
         }));
-    }, [correctiveDate, preventiveDate]);
+    }, [correctiveDate, preventiveDate, isSuccess, data]);
 
     const handleFormData = (e: ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -46,7 +50,7 @@ export default function EightDReportPage() {
     };
 
     const handleDownload = () => {
-        data?.download.then((url) => {
+        data?.download?.then((url) => {
             const xhr = new XMLHttpRequest();
             xhr.responseType = 'blob';
             xhr.onload = () => {
@@ -77,7 +81,8 @@ export default function EightDReportPage() {
                                 readOnly
                             />
                         </div>
-                        <button className="download-btn" onClick={handleDownload}>Download</button>
+
+                        {data?.claim?.filePath && <button className="download-btn" onClick={handleDownload}>Download</button>}
                         <hr />
                         {/* Containment Actions */}
                         <div>

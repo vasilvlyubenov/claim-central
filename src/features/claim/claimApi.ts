@@ -95,6 +95,7 @@ export const claimApi = firebaseApi.injectEndpoints({
         }),
         getClaimById: builder.query({
             async queryFn(claimId: string | undefined) {
+                let download = null;
 
                 if (!claimId) {
                     throw Error('Something went wrong');
@@ -106,7 +107,11 @@ export const claimApi = firebaseApi.injectEndpoints({
                     const docSnap = await getDoc(docRef);
                     const data = docSnap.data();
 
-                    return {data: {claim: data, download: getDownloadURL(ref(storage, data?.filePath))}};
+                    if (data?.filePath !== '') {
+                        download = getDownloadURL(ref(storage, data?.filePath));
+                    }
+
+                    return {data: {claim: data, download: download}};
                 } catch (error) {
                     return { error };
                 }
