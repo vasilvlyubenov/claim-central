@@ -6,8 +6,8 @@ import { saveAs } from 'file-saver';
 import './EightDReport.css';
 
 import { EightDReport } from '../../types/EightDReport';
-import { useGetClaimByIdQuery } from '../../features/claim/claimApi';
-import { useParams } from 'react-router-dom';
+import { useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } from '../../features/claim/claimApi';
+import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from 'components/common/Spinner/Spinner';
 
 const initialState: EightDReport = {
@@ -26,18 +26,44 @@ const initialState: EightDReport = {
 export default function EightDReportPage() {
     const [formData, setFormData] = useState(initialState);
     const [correctiveDate, setCorrectiveDate] = useState<Date | null>(null);
+    const [verifyCorrectiveDate, setVerifyCorrectiveDate] = useState<Date | null>(null);
     const [preventiveDate, setPreventiveDate] = useState<Date | null>(null);
     const { claimId } = useParams();
+    const navigate = useNavigate();
     const { data, isLoading } = useGetClaimByIdQuery(claimId);
+    const {data: reportData, isLoading: isReporLoading, isSuccess: isReportDataSuccess, refetch} = useGetReportByClaimIdQuery(claimId);
+    const [saveReport, {isLoading: isSaveReportLoading, isSuccess: isSaveReportSuccess}] = useSaveReportMutation();
     const currentDate = new Date();
+
+    useEffect(() => {
+        refetch();
+    }, [refetch]);
+
+    useEffect(() => {
+        
+        if (isReportDataSuccess) {
+            setFormData(state => ({
+                ...state,
+                ...reportData
+            }));
+            setCorrectiveDate(new Date(reportData.correctiveActionDeadline));
+            setVerifyCorrectiveDate(new Date(reportData.verifyCorrectiveActionsDeadline));
+            setPreventiveDate(new Date(reportData.preventiveActionDeadline));
+        }
+    }, [isReportDataSuccess, reportData]);
 
     useEffect(() => {
         setFormData(state => ({
             ...state,
             correctiveActionDeadline: correctiveDate,
+            verifyCorrectiveActionsDeadline: verifyCorrectiveDate,
             preventiveActionDeadline: preventiveDate
         }));
-    }, [correctiveDate, preventiveDate]);
+        
+        if (isSaveReportSuccess) {
+            navigate('/open-claims');
+        }
+    }, [correctiveDate, verifyCorrectiveDate, preventiveDate, isSaveReportSuccess, navigate]);
 
     const handleFormData = (e: ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -46,7 +72,11 @@ export default function EightDReportPage() {
 
     const handleFormSubmit = (e: FormEvent) => {
         e.preventDefault();
-        console.log('Submitting 8D Report:', formData);
+
+        if (claimId) {
+            setFormData(state => ({ ...state, descriptionId: claimId }));
+            saveReport({ref: claimId, report: formData});
+        }
     };
 
     const handleDownload = () => {
@@ -66,7 +96,7 @@ export default function EightDReportPage() {
 
     return (
         <>
-            {isLoading
+            {(isLoading && isReporLoading && isSaveReportLoading)
                 ? <Spinner />
                 : <div className="max-w-3xl mx-auto mt-8 report text-central">
                     <h1 className="text-3xl font-semibold mb-4">8D Report</h1>
@@ -83,7 +113,7 @@ export default function EightDReportPage() {
                             />
                         </div>
 
-                        {data?.claim?.filePath && <button className="download-btn" onClick={handleDownload}>Download</button>}
+                        {data?.claim?.filePath && <button type="button" className="download-btn" onClick={handleDownload}>Download</button>}
                         <hr />
                         {/* Containment Actions */}
                         <div>
@@ -129,7 +159,7 @@ export default function EightDReportPage() {
                             <DatePicker
                                 className='datepicker'
                                 showIcon
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="yyyy/MM/dd"
                                 selected={formData.correctiveActionDeadline}
                                 onChange={setCorrectiveDate} />
                         </div>
@@ -141,8 +171,8 @@ export default function EightDReportPage() {
                                 ? <span className='deadline'>Until: {data?.claim?.deadlines?.d6}</span>
                                 : <span className='deadline-late'>Late</span>}
                             <textarea
-                                name='correctiveActions'
-                                value={formData.correctiveActions}
+                                name='verifyCorrectiveActions'
+                                value={formData.verifyCorrectiveActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
                             />
@@ -150,9 +180,9 @@ export default function EightDReportPage() {
                             <DatePicker
                                 className='datepicker'
                                 showIcon
-                                dateFormat="dd/MM/yyyy"
-                                selected={formData.correctiveActionDeadline}
-                                onChange={setCorrectiveDate} />
+                                dateFormat="yyyy/MM/dd"
+                                selected={formData.verifyCorrectiveActionsDeadline}
+                                onChange={setVerifyCorrectiveDate} />
                         </div>
 
                         {/* Preventive Actions */}
@@ -171,7 +201,7 @@ export default function EightDReportPage() {
                             <DatePicker
                                 className='datepicker'
                                 showIcon
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="yyyy/MM/dd"
                                 selected={formData.preventiveActionDeadline}
                                 onChange={(setPreventiveDate)} />
                         </div>
@@ -183,8 +213,8 @@ export default function EightDReportPage() {
                                 ? <span className='deadline'>Until: {data?.claim?.deadlines?.d4}</span>
                                 : <span className='deadline-late'>Late</span>}
                             <textarea
-                                name='rootCauseAnalysis'
-                                value={formData.rootCauseAnalysis}
+                                name='teamRecognition'
+                                value={formData.teamRecognition}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
                             />

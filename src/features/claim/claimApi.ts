@@ -1,8 +1,9 @@
 import { firebaseApi } from '../../app/firebaseApi';
 import { storage, db, auth } from '../../config/firebase';
-import { DocumentData, addDoc, collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { DocumentData, addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 
 import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
+import { EightDReport } from '../../types/EightDReport';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { calculateDeadline, generateFileName } from '../../utils/helpers';
 
@@ -23,7 +24,7 @@ export const claimApi = firebaseApi.injectEndpoints({
                     }
 
                     const date = new Date();
-                    
+
                     const docData = {
                         subject: data.subject,
                         issueDescription: data.issueDescription,
@@ -44,6 +45,21 @@ export const claimApi = firebaseApi.injectEndpoints({
                     };
 
                     const docRef = await addDoc(collection(db, 'claims'), docData);
+
+                    const reportData = {
+                        descriptionId: docRef.id,
+                        containmentActions: '',
+                        rootCauseAnalysis: '',
+                        correctiveActions: '',
+                        correctiveActionDeadline: null,
+                        verifyCorrectiveActions: '',
+                        verifyCorrectiveActionsDeadline: null,
+                        preventiveActions: '',
+                        preventiveActionDeadline: null,
+                        teamRecognition: '',
+                    };
+
+                    await setDoc(doc(db, 'reports', docRef.id), reportData);
 
                     return { data: docRef.id };
 
@@ -111,7 +127,62 @@ export const claimApi = firebaseApi.injectEndpoints({
                         download = getDownloadURL(ref(storage, data?.filePath));
                     }
 
-                    return {data: {claim: data, download: download}};
+                    return { data: { claim: data, download: download } };
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
+        getReportByClaimId: builder.query({
+            async queryFn(claimId: string | undefined) {
+                try {
+
+                    if (!claimId) {
+                        throw Error('Something went wrong');
+                    }
+
+                    try {
+
+                        const docRef = doc(db, 'reports', claimId);
+                        const docSnap = await getDoc(docRef);
+                        const data = docSnap.data();
+
+                        const result = {
+                            ...data,
+                            correctiveActionDeadline: new Date(data?.correctiveActionDeadline.seconds * 1000 + data?.correctiveActionDeadline.nanoseconds / 1000000),
+                            verifyCorrectiveActionsDeadline: new Date(data?.verifyCorrectiveActionsDeadline.seconds * 1000 + data?.verifyCorrectiveActionsDeadline.nanoseconds / 1000000),
+                            preventiveActionDeadline: new Date(data?.preventiveActionDeadline.seconds * 1000 + data?.preventiveActionDeadline.nanoseconds / 1000000),
+                        };
+
+                        return { data: result };
+                    } catch (error) {
+                        return { error };
+                    }
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
+        saveReport: builder.mutation({
+            async queryFn(args: { ref: string, report: EightDReport }) {
+                try {
+                    const docData = {
+                        descriptionId: args.report.descriptionId,
+                        containmentActions: args.report.containmentActions,
+                        rootCauseAnalysis: args.report.rootCauseAnalysis,
+                        correctiveActions: args.report.correctiveActions,
+                        correctiveActionDeadline: args.report.correctiveActionDeadline,
+                        verifyCorrectiveActions: args.report.verifyCorrectiveActions,
+                        verifyCorrectiveActionsDeadline: args.report.verifyCorrectiveActionsDeadline,
+                        preventiveActions: args.report.preventiveActions,
+                        preventiveActionDeadline: args.report.preventiveActionDeadline,
+                        teamRecognition: args.report.teamRecognition,
+                    };
+
+                    const reportRef = doc(db, 'reports', args.ref);
+                    await updateDoc(reportRef, docData);
+
+                    return { data: 'Success' };
                 } catch (error) {
                     return { error };
                 }
@@ -120,4 +191,4 @@ export const claimApi = firebaseApi.injectEndpoints({
     })
 });
 
-export const { useOpenClaimMutation, useSupplierClaimsQuery, useGetClaimByIdQuery } = claimApi;
+export const { useOpenClaimMutation, useSupplierClaimsQuery, useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } = claimApi;
