@@ -40,12 +40,14 @@ export const userSlice = createSlice({
             state.email = null;
             state.refreshToken = null;
             state.userType = null;
-            state.deadlines.d3 = null;
-            state.deadlines.d4 = null;
-            state.deadlines.d5 = null;
-            state.deadlines.d6 = null;
-            state.deadlines.d7 = null;
-            state.deadlines.d8 = null;
+            state.deadlines = {
+                d3: null,
+                d4: null,
+                d5: null,
+                d6: null,
+                d7: null,
+                d8: null,
+            };
         }
     }
 });

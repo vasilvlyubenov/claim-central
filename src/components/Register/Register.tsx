@@ -5,7 +5,7 @@ import { RegisterFormData } from '../../types/RegisterFormData';
 import { HandleInputChange } from 'types/HandleInputChange';
 import { validatePassword } from './../../utils/helpers';
 import { validateEmail } from './../../utils/helpers';
-import { useUserSignUpMutation } from '../../features/user/userApi';
+import { useGetUserInfoQuery, useUserSignUpMutation } from '../../features/user/userApi';
 import { useAppDispatch } from '../../app/hooks';
 import { setUser } from '../../features/user/userSlice';
 
@@ -45,12 +45,37 @@ export default function Register() {
   const [formData, setFormData] = useState(initialState);
   const [disabled, setDisabled] = useState(false);
   const [errors, setErrors] = useState(initialErrorsState);
+  const [skip, setSkip] = useState(true);
   const [userSignUp, { data, isSuccess, error, isLoading }] = useUserSignUpMutation();
+  const { data: userInfoData, isSuccess: userInfoSuccess } = useGetUserInfoQuery({
+    skip
+  });
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setUser({ uid: data?.user.uid, email: data?.user.email, refreshToken: data?.user.refreshToken, userType: formData.userType }));
+      setSkip(false);
+    }
+  }, [isSuccess, setSkip]);
+
+  useEffect(() => {
+
+    if (userInfoSuccess && userInfoData.deadlines) {
+      dispatch(setUser({
+        uid: data?.user.uid,
+        email: data?.user.email,
+        refreshToken: data?.user.refreshToken,
+        userType: userInfoData.userType,
+        deadlines: {
+          d3: userInfoData.deadlines.d3,
+          d4: userInfoData.deadlines.d4,
+          d5: userInfoData.deadlines.d5,
+          d6: userInfoData.deadlines.d6,
+          d7: userInfoData.deadlines.d7,
+          d8: userInfoData.deadlines.d8,
+        }
+      }));
+
     }
 
     if (error) {
@@ -60,7 +85,7 @@ export default function Register() {
         setErrors(state => ({ ...state, error: {} }));
       }
     }
-  }, [isSuccess, dispatch, data, formData, error]);
+  }, [dispatch, data, formData, error, userInfoSuccess, userInfoData]);
 
 
   const handleInputChange: HandleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -76,8 +101,8 @@ export default function Register() {
 
     setFormData({
       ...formData, [name]: value,
-      deadlines: {...formData.deadlines, [name]: value},
-      
+      deadlines: { ...formData.deadlines, [name]: value },
+
     });
   };
 

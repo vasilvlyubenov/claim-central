@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Dialog, Popover } from '@headlessui/react';
 import {
   Bars3Icon,
@@ -39,6 +39,7 @@ export default function Example() {
   const { error } = useUserSignOutQuery(null, { skip });
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
+  const navigate = useNavigate();
   const { data, isSuccess } = useGetUserInfoQuery({
     skip: infoSkip
   });
@@ -50,22 +51,22 @@ export default function Example() {
 
         if (isSuccess) {
 
-          if (data.deadlines) {
+          
             dispatch(setUser({
               uid: res.uid,
               email: res.email,
               refreshToken: res.refreshToken,
               userType: res.displayName,
               deadlines: {
-                d3: data?.deadlines.d3,
-                d4: data?.deadlines.d4,
-                d5: data?.deadlines.d5,
-                d6: data?.deadlines.d6,
-                d7: data?.deadlines.d7,
-                d8: data?.deadlines.d8,
+                d3: data?.deadlines?.d3,
+                d4: data?.deadlines?.d4,
+                d5: data?.deadlines?.d5,
+                d6: data?.deadlines?.d6,
+                d7: data?.deadlines?.d7,
+                d8: data?.deadlines?.d8,
               }
             }));
-          }
+          
 
         }
 
@@ -88,6 +89,8 @@ export default function Example() {
   const logoutUser = () => {
     setSkip(false);
     dispatch(logout());
+    navigate('/');
+    window.location.reload();
 
     if (error) {
       console.error(error);

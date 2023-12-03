@@ -26,8 +26,8 @@ export default function Login() {
   useEffect(() => {
 
     if (signSuccess) {
-      setUserId(userData.auth.uid);
-      setSkip(true);
+      setUserId(userData.auth.uid);  
+      setSkip(true);      
       dispatch(setUser({
         uid: userData.auth.uid,
         email: userData.auth.email,
