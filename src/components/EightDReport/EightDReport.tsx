@@ -8,8 +8,9 @@ import './EightDReport.css';
 
 import { useAppSelector } from '../../app/hooks';
 import { EightDReport } from '../../types/EightDReport';
-import { useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } from '../../features/claim/claimApi';
+import { useDeleteClaimMutation, useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } from '../../features/claim/claimApi';
 import Spinner from 'components/common/Spinner/Spinner';
+import DeleteConfirmationModal from 'components/DeleteConfirmationModal/DeleteConfirmationModal';
 
 const initialState: EightDReport = {
     descriptionId: '',
@@ -30,11 +31,13 @@ export default function EightDReportPage() {
     const [verifyCorrectiveDate, setVerifyCorrectiveDate] = useState<Date | null>(null);
     const [preventiveDate, setPreventiveDate] = useState<Date | null>(null);
     const [isCustomer, setIsCustomer] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const { claimId } = useParams();
     const navigate = useNavigate();
     const { data, isLoading } = useGetClaimByIdQuery(claimId);
     const {data: reportData, isLoading: isReporLoading, isSuccess: isReportDataSuccess, refetch} = useGetReportByClaimIdQuery(claimId);
     const [saveReport, {isLoading: isSaveReportLoading, isSuccess: isSaveReportSuccess}] = useSaveReportMutation();
+    const [deleteClaim, {isLoading: isDeleteLoading, isSuccess: isDeleteSuccess}] = useDeleteClaimMutation();
     const selector = useAppSelector(selector => selector.user);
     const currentDate = new Date();
 
@@ -63,7 +66,11 @@ export default function EightDReportPage() {
             setVerifyCorrectiveDate(new Date(reportData.verifyCorrectiveActionsDeadline));
             setPreventiveDate(new Date(reportData.preventiveActionDeadline));
         }
-    }, [isReportDataSuccess, reportData]);
+
+        if (isDeleteSuccess) {
+            navigate('/customer-claims');
+        }
+    }, [isReportDataSuccess, reportData, isDeleteSuccess, navigate]);
 
     useEffect(() => {
         setFormData(state => ({
@@ -107,9 +114,25 @@ export default function EightDReportPage() {
         });
     };
 
+    const handleModalView = () => {
+        setIsOpen(state => !state);
+    };
+
+    const handleDelete = () => {
+        if (data && claimId) {
+            deleteClaim({
+                claimId: claimId, 
+                filePath: data?.claim?.filePath,
+                issueDescription: data?.claim?.issueDescription,
+                subject: data?.claim?.subject,
+            });
+        }
+    };
+
     return (
         <>
-            {(isLoading || isReporLoading || isSaveReportLoading)
+            {isOpen && <DeleteConfirmationModal onClose={handleModalView} onDelete={handleDelete}/>}
+            {(isLoading || isReporLoading || isSaveReportLoading || isDeleteLoading)
                 ? <Spinner />
                 : <div className="max-w-3xl mx-auto mt-8 report text-central">
                     <h1 className="text-3xl font-semibold mb-4">8D Report</h1>
@@ -128,7 +151,7 @@ export default function EightDReportPage() {
 
                         {data?.claim?.filePath && <button type="button" className="download-btn" onClick={handleDownload}>Download</button>}
                         {isCustomer && <Link to={`/edit/${claimId}`} className='edit-link'>Edit</Link>}
-                        {isCustomer && <button type="button" className="delete-btn" onClick={handleDownload}>Delete</button>}
+                        {isCustomer && <button type="button" className="delete-btn" onClick={handleModalView}>Delete</button>}
                         {isCustomer && <button type="button" className="close-btn" onClick={handleDownload}>Close</button>}
                         <hr />
                         {/* Containment Actions */}
@@ -177,7 +200,8 @@ export default function EightDReportPage() {
                                 showIcon
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.correctiveActionDeadline}
-                                onChange={setCorrectiveDate} />
+                                onChange={setCorrectiveDate} 
+                                disabled={isOpen}/>
                         </div>
 
                         {/* Verify Corrective Actions */}
@@ -198,7 +222,8 @@ export default function EightDReportPage() {
                                 showIcon
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.verifyCorrectiveActionsDeadline}
-                                onChange={setVerifyCorrectiveDate} />
+                                onChange={setVerifyCorrectiveDate} 
+                                disabled={isOpen}/>
                         </div>
 
                         {/* Preventive Actions */}
@@ -219,7 +244,8 @@ export default function EightDReportPage() {
                                 showIcon
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.preventiveActionDeadline}
-                                onChange={(setPreventiveDate)} />
+                                onChange={(setPreventiveDate)} 
+                                disabled={isOpen}/>
                         </div>
 
                         {/* Team recognition */}
