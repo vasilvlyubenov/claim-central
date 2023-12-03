@@ -1,13 +1,14 @@
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { saveAs } from 'file-saver';
 
 import './EightDReport.css';
 
+import { useAppSelector } from '../../app/hooks';
 import { EightDReport } from '../../types/EightDReport';
 import { useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } from '../../features/claim/claimApi';
-import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from 'components/common/Spinner/Spinner';
 
 const initialState: EightDReport = {
@@ -28,16 +29,25 @@ export default function EightDReportPage() {
     const [correctiveDate, setCorrectiveDate] = useState<Date | null>(null);
     const [verifyCorrectiveDate, setVerifyCorrectiveDate] = useState<Date | null>(null);
     const [preventiveDate, setPreventiveDate] = useState<Date | null>(null);
+    const [isCustomer, setIsCustomer] = useState(false);
     const { claimId } = useParams();
     const navigate = useNavigate();
     const { data, isLoading } = useGetClaimByIdQuery(claimId);
     const {data: reportData, isLoading: isReporLoading, isSuccess: isReportDataSuccess, refetch} = useGetReportByClaimIdQuery(claimId);
     const [saveReport, {isLoading: isSaveReportLoading, isSuccess: isSaveReportSuccess}] = useSaveReportMutation();
+    const selector = useAppSelector(selector => selector.user);
     const currentDate = new Date();
 
     useEffect(() => {
         refetch();
-    }, [refetch]);
+
+        if (selector.userType === 'customer') {
+            setIsCustomer(true);
+        } else {
+            setIsCustomer(false);
+        }
+    }, [refetch, selector]);
+    
 
     useEffect(() => {
         
@@ -114,6 +124,9 @@ export default function EightDReportPage() {
                         </div>
 
                         {data?.claim?.filePath && <button type="button" className="download-btn" onClick={handleDownload}>Download</button>}
+                        {isCustomer && <Link to={`/edit/${claimId}`} className='edit-link'>Edit</Link>}
+                        {isCustomer && <button type="button" className="delete-btn" onClick={handleDownload}>Delete</button>}
+                        {isCustomer && <button type="button" className="close-btn" onClick={handleDownload}>Close</button>}
                         <hr />
                         {/* Containment Actions */}
                         <div>
