@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { HandleInputChange } from '../../types/HandleInputChange';
 import { RegisterFormData } from 'types/RegisterFormData';
 
-import './DeadLines.css';
+import './Deadlines.css';
 
 export default function Deadlines(props: {
     formData: RegisterFormData
