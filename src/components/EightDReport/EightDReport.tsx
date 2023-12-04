@@ -52,7 +52,7 @@ export default function EightDReportPage() {
         } else {
             setIsCustomer(false);
         }
-    }, [refetch, selector]);
+    }, [selector]);
     
 
     useEffect(() => {
@@ -62,9 +62,16 @@ export default function EightDReportPage() {
                 ...state,
                 ...reportData
             }));
-            setCorrectiveDate(new Date(reportData.correctiveActionDeadline));
-            setVerifyCorrectiveDate(new Date(reportData.verifyCorrectiveActionsDeadline));
-            setPreventiveDate(new Date(reportData.preventiveActionDeadline));
+
+            if (reportData.correctiveActionDeadline) {
+                setCorrectiveDate(new Date(reportData.correctiveActionDeadline));
+            }
+            if (reportData.verifyCorrectiveActionsDeadline) {
+                setVerifyCorrectiveDate(new Date(reportData.verifyCorrectiveActionsDeadline));
+            }
+            if (reportData.preventiveActionDeadline) {
+                setPreventiveDate(new Date(reportData.preventiveActionDeadline));
+            }
         }
 
         if (isDeleteSuccess) {
@@ -81,9 +88,9 @@ export default function EightDReportPage() {
         }));
         
         if (isSaveReportSuccess) {
-            navigate('/open-claims');
+            navigate(`/report/${claimId}`);
         }
-    }, [correctiveDate, verifyCorrectiveDate, preventiveDate, isSaveReportSuccess, navigate]);
+    }, [correctiveDate, verifyCorrectiveDate, preventiveDate, isSaveReportSuccess, navigate, claimId]);
 
     const handleFormData = (e: ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -165,6 +172,7 @@ export default function EightDReportPage() {
                                 value={formData.containmentActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
+                                disabled={isCustomer}
                             />
                         </div>
 
@@ -179,6 +187,7 @@ export default function EightDReportPage() {
                                 value={formData.rootCauseAnalysis}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
+                                disabled={isCustomer}
                             />
                         </div>
 
@@ -193,6 +202,7 @@ export default function EightDReportPage() {
                                 value={formData.correctiveActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
+                                disabled={isCustomer}
                             />
                             <span className='font-medium'>Deadline: </span>
                             <DatePicker
@@ -201,7 +211,8 @@ export default function EightDReportPage() {
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.correctiveActionDeadline}
                                 onChange={setCorrectiveDate} 
-                                disabled={isOpen}/>
+                                disabled={isOpen || isCustomer}/>
+                                
                         </div>
 
                         {/* Verify Corrective Actions */}
@@ -215,6 +226,7 @@ export default function EightDReportPage() {
                                 value={formData.verifyCorrectiveActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
+                                disabled={isCustomer}
                             />
                             <span className='font-medium'>Deadline: </span>
                             <DatePicker
@@ -223,7 +235,7 @@ export default function EightDReportPage() {
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.verifyCorrectiveActionsDeadline}
                                 onChange={setVerifyCorrectiveDate} 
-                                disabled={isOpen}/>
+                                disabled={isOpen || isCustomer}/>
                         </div>
 
                         {/* Preventive Actions */}
@@ -237,6 +249,7 @@ export default function EightDReportPage() {
                                 value={formData.preventiveActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
+                                disabled={isCustomer}
                             />
                             <span className='font-medium'>Deadline: </span>
                             <DatePicker
@@ -245,7 +258,7 @@ export default function EightDReportPage() {
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.preventiveActionDeadline}
                                 onChange={(setPreventiveDate)} 
-                                disabled={isOpen}/>
+                                disabled={isOpen || isCustomer}/>
                         </div>
 
                         {/* Team recognition */}
@@ -259,12 +272,13 @@ export default function EightDReportPage() {
                                 value={formData.teamRecognition}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
+                                disabled={isCustomer}
                             />
                         </div>
 
-                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                        {!isCustomer && <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
                             Submit 8D Report
-                        </button>
+                        </button>}
                     </form>
                 </div>}
         </>

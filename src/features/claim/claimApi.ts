@@ -144,20 +144,24 @@ export const claimApi = firebaseApi.injectEndpoints({
                     }
 
                     try {
-
                         const docRef = doc(db, 'reports', claimId);
                         const docSnap = await getDoc(docRef);
                         const data = docSnap.data();
 
+                        const convCorrActionDeadline = data?.correctiveActionDeadline ? new Date(data?.correctiveActionDeadline.seconds * 1000 + data?.correctiveActionDeadline.nanoseconds / 1000000) : null;
+                        const convVerifyDeadline = data?.verifyCorrectiveActionsDeadline ? new Date(data?.verifyCorrectiveActionsDeadline.seconds * 1000 + data?.verifyCorrectiveActionsDeadline.nanoseconds / 1000000) : null;
+                        const convPrevActionsDeadline = data?.preventiveActionDeadline ? new Date(data?.preventiveActionDeadline.seconds * 1000 + data?.preventiveActionDeadline.nanoseconds / 1000000) : null;
+
                         const result = {
                             ...data,
-                            correctiveActionDeadline: new Date(data?.correctiveActionDeadline.seconds * 1000 + data?.correctiveActionDeadline.nanoseconds / 1000000),
-                            verifyCorrectiveActionsDeadline: new Date(data?.verifyCorrectiveActionsDeadline.seconds * 1000 + data?.verifyCorrectiveActionsDeadline.nanoseconds / 1000000),
-                            preventiveActionDeadline: new Date(data?.preventiveActionDeadline.seconds * 1000 + data?.preventiveActionDeadline.nanoseconds / 1000000),
+                            correctiveActionDeadline: convCorrActionDeadline,
+                            verifyCorrectiveActionsDeadline: convVerifyDeadline,
+                            preventiveActionDeadline: convPrevActionsDeadline,
                         };
 
                         return { data: result };
                     } catch (error) {
+                        console.log(error);
                         return { error };
                     }
                 } catch (error) {
@@ -181,7 +185,7 @@ export const claimApi = firebaseApi.injectEndpoints({
                     };
 
                     const reportRef = doc(db, 'reports', args.ref);
-                    await updateDoc(reportRef, docData);
+                    await updateDoc(reportRef, { ...docData });
 
                     return { data: 'Success' };
                 } catch (error) {
