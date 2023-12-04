@@ -15,6 +15,7 @@ import SupplierOpenClaims from 'components/SupplierOpenClaims/SupplierOpenClaims
 import EightDReportPage from 'components/EightDReport/EightDReport';
 import CustomerClaims from 'components/CustomerClaims/CustomerClaims';
 import EditClaim from 'components/EditClaim/EditClaim';
+import Dashboard from 'components/Dashboard/Dashboard';
 
 function App() {
 
@@ -23,7 +24,7 @@ function App() {
       <Header />
       <div className='content'>
         <Routes>
-          <Route path='/' />
+          <Route path='/' element={<Dashboard />} />
 
           <Route element={<AuthComponent allowedRole='' />}>
             <Route path='/login' element={<Login />} />

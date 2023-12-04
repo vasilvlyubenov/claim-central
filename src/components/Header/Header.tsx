@@ -122,7 +122,7 @@ export default function Example() {
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
 
-          <Link to="/dashboard" className="text-sm font-semibold leading-6 text-central">
+          <Link to="/" className="text-sm font-semibold leading-6 text-central">
             Dashboard
           </Link>
 
@@ -167,7 +167,7 @@ export default function Example() {
                 />}
 
                 <Link
-                  to="#"
+                  to="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-central hover:bg-gray-50"
                   onClick={handleCloseMobileMenu}
                 >
