@@ -1,0 +1,34 @@
+.edit-claim textarea {
+    min-height: 10em;
+    color: #000;
+}
+
+.edit-claim input {
+    color: #000;
+}
+
+.edit-claim button {
+    background-color: #984e1e;
+    font-weight: 600;
+}
+
+.edit-claim button:active {
+    background-color: #83451b;
+}
+
+.edit-claim-error {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    padding: 0.2em 1em;
+    color: red;
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid red;
+    text-align: left;
+}
+
+.edit-claim input:focus,
+.edit-claim select:focus,
+.edit-claim textarea:focus {
+    outline: 2px solid #984e1e;
+}

@@ -1,0 +1,90 @@
+.report textarea {
+    min-width: 8em;
+    min-height: 7em;
+    color: black;
+}
+
+.report textarea:focus  {
+    outline: 2px solid #984e1e;
+}
+
+.datepicker {
+    border: 1px solid #dbdbdb;
+    color: black;
+}
+
+.datepicker:focus {
+    outline: 2px solid #984e1e;
+}
+
+.report button {
+    background-color: #984e1e;
+    font-weight: 600;
+}
+
+.report button:active {
+    background-color: #83451b;
+}
+
+.report h2 {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    color: #e10000;
+}
+
+.report .download-btn {
+    color: #83451b;
+    background-color: #fff;
+    border: 1px solid #83451b;
+    width: 7em;
+    margin: 0 1em;
+    border-radius: 1em;
+}
+
+.report .deadline {
+    color: #000;
+}
+
+.report .deadline-late {
+    color: #f00;
+    font-weight: 600;
+}
+
+.edit-link {
+    display: inline-block;
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #000;
+    width: 7em;
+    border-radius: 1em;
+    margin: 0 1em;
+    font-weight: 600;
+}
+
+button.delete-btn {
+    color: #e10000;
+    background-color: #fff;
+    border: 1px solid #e10000;
+    width: 7em;
+    border-radius: 1em;
+    margin: 0 1em;
+    font-weight: 600;
+}
+
+button.close-btn {
+    color: #008000;
+    background-color: #fff;
+    border: 1px solid #008000;
+    width: 7em;
+    border-radius: 1em;
+    margin: 0 1em;
+    font-weight: 600;
+}
+
+.report .close-btn:active, .report .delete-btn:active, .report .download-btn:active {
+    background-color: #fff;
+}
+
+.report .close-btn:hover, .report .delete-btn:hover, .report .download-btn:hover, .report .edit-link:hover {
+    background-color: #f5f4f4;
+}
