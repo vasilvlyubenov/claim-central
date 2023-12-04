@@ -90,10 +90,10 @@ export const claimApi = firebaseApi.injectEndpoints({
                     const supplierId = auth.currentUser?.uid;
 
                     const q = query(collection(db, 'claims'), where('supplierId', '==', supplierId));
-                    const querrySnapshot = await getDocs(q);
+                    const querySnapshot = await getDocs(q);
                     const claims: DocumentData[] = [];
 
-                    querrySnapshot.forEach(doc => {
+                    querySnapshot.forEach(doc => {
                         const line = doc.data();
 
                         const converted = {
@@ -212,10 +212,10 @@ export const claimApi = firebaseApi.injectEndpoints({
                     const customerId = auth.currentUser?.uid;
 
                     const q = query(collection(db, 'claims'), where('customerId', '==', customerId));
-                    const querrySnapshot = await getDocs(q);
+                    const querySnapshot = await getDocs(q);
                     const claims: DocumentData[] = [];
 
-                    querrySnapshot.forEach(doc => {
+                    querySnapshot.forEach(doc => {
                         const line = doc.data();
 
                         const converted = {
@@ -305,6 +305,24 @@ export const claimApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        getAllClaims: builder.query({
+            async queryFn() {
+                try {
+                    const q = query(collection(db, 'claims'));
+                    const querySnapshot = await getDocs(q);
+
+                    const claims: DocumentData[] = [];
+
+                    querySnapshot.forEach(claim => {
+                        claims.push(claim.data());
+                    });
+
+                    return { data: claims };
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
     })
 });
 
@@ -317,5 +335,6 @@ export const {
     useCustomerClaimsQuery,
     useEditClaimMutation,
     useDeleteClaimMutation,
-    useCloseClaimMutation
+    useCloseClaimMutation,
+    useGetAllClaimsQuery
 } = claimApi;
