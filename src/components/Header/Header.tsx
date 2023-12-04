@@ -107,7 +107,7 @@ export default function Example() {
         <div className="flex lg:flex-1">
           <Link to="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Claim central</span>
-            <img className="h-8 w-auto" src="./src/assets/icon.png" alt="" />
+            <img className="h-8 w-auto" src="/assets/icon.png" alt="" />
           </Link>
         </div>
         <div className="flex lg:hidden">
