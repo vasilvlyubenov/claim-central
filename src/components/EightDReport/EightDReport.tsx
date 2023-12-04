@@ -8,7 +8,7 @@ import './EightDReport.css';
 
 import { useAppSelector } from '../../app/hooks';
 import { EightDReport } from '../../types/EightDReport';
-import { useDeleteClaimMutation, useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } from '../../features/claim/claimApi';
+import { useCloseClaimMutation, useDeleteClaimMutation, useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } from '../../features/claim/claimApi';
 import Spinner from 'components/common/Spinner/Spinner';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal/DeleteConfirmationModal';
 
@@ -35,9 +35,10 @@ export default function EightDReportPage() {
     const { claimId } = useParams();
     const navigate = useNavigate();
     const { data, isLoading } = useGetClaimByIdQuery(claimId);
-    const {data: reportData, isLoading: isReporLoading, isSuccess: isReportDataSuccess, refetch} = useGetReportByClaimIdQuery(claimId);
-    const [saveReport, {isLoading: isSaveReportLoading, isSuccess: isSaveReportSuccess}] = useSaveReportMutation();
-    const [deleteClaim, {isLoading: isDeleteLoading, isSuccess: isDeleteSuccess}] = useDeleteClaimMutation();
+    const { data: reportData, isLoading: isReporLoading, isSuccess: isReportDataSuccess, refetch } = useGetReportByClaimIdQuery(claimId);
+    const [saveReport, { isLoading: isSaveReportLoading, isSuccess: isSaveReportSuccess }] = useSaveReportMutation();
+    const [deleteClaim, { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess }] = useDeleteClaimMutation();
+    const [closeClaim, { isLoading: isCloseClaimLoading }] = useCloseClaimMutation();
     const selector = useAppSelector(selector => selector.user);
     const currentDate = new Date();
 
@@ -53,10 +54,10 @@ export default function EightDReportPage() {
             setIsCustomer(false);
         }
     }, [selector]);
-    
+
 
     useEffect(() => {
-        
+
         if (isReportDataSuccess) {
             setFormData(state => ({
                 ...state,
@@ -86,7 +87,7 @@ export default function EightDReportPage() {
             verifyCorrectiveActionsDeadline: verifyCorrectiveDate,
             preventiveActionDeadline: preventiveDate
         }));
-        
+
         if (isSaveReportSuccess) {
             navigate(`/report/${claimId}`);
         }
@@ -102,7 +103,7 @@ export default function EightDReportPage() {
 
         if (claimId) {
             setFormData(state => ({ ...state, descriptionId: claimId }));
-            saveReport({ref: claimId, report: formData});
+            saveReport({ ref: claimId, report: formData });
         }
     };
 
@@ -128,7 +129,7 @@ export default function EightDReportPage() {
     const handleDelete = () => {
         if (data && claimId) {
             deleteClaim({
-                claimId: claimId, 
+                claimId: claimId,
                 filePath: data?.claim?.filePath,
                 issueDescription: data?.claim?.issueDescription,
                 subject: data?.claim?.subject,
@@ -136,10 +137,18 @@ export default function EightDReportPage() {
         }
     };
 
+    const handlecloseClaim = () => {
+        closeClaim(claimId);
+        navigate('/customer-claims');
+    };
+
     return (
         <>
-            {isOpen && <DeleteConfirmationModal onClose={handleModalView} onDelete={handleDelete}/>}
-            {(isLoading || isReporLoading || isSaveReportLoading || isDeleteLoading)
+            {/* Deletion modal */}
+            {isOpen && <DeleteConfirmationModal onClose={handleModalView} onDelete={handleDelete} />}
+
+            {/* component */}
+            {(isLoading || isReporLoading || isSaveReportLoading || isDeleteLoading || isCloseClaimLoading)
                 ? <Spinner />
                 : <div className="max-w-3xl mx-auto mt-8 report text-central">
                     <h1 className="text-3xl font-semibold mb-4">8D Report</h1>
@@ -157,9 +166,9 @@ export default function EightDReportPage() {
                         </div>
 
                         {data?.claim?.filePath && <button type="button" className="download-btn" onClick={handleDownload}>Download</button>}
-                        {isCustomer && <Link to={`/edit/${claimId}`} className='edit-link'>Edit</Link>}
-                        {isCustomer && <button type="button" className="delete-btn" onClick={handleModalView}>Delete</button>}
-                        {isCustomer && <button type="button" className="close-btn" onClick={handleDownload}>Close</button>}
+                        {(isCustomer && data?.claim?.open) && <Link to={`/edit/${claimId}`} className='edit-link'>Edit</Link>}
+                        {(isCustomer && data?.claim?.open) && <button type="button" className="delete-btn" onClick={handleModalView}>Delete</button>}
+                        {(isCustomer && data?.claim?.open) && <button type="button" className="close-btn" onClick={handlecloseClaim}>Close</button>}
                         <hr />
                         {/* Containment Actions */}
                         <div>
@@ -172,7 +181,7 @@ export default function EightDReportPage() {
                                 value={formData.containmentActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
-                                disabled={isCustomer}
+                                disabled={isCustomer || !data?.claim?.open}
                             />
                         </div>
 
@@ -187,7 +196,7 @@ export default function EightDReportPage() {
                                 value={formData.rootCauseAnalysis}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
-                                disabled={isCustomer}
+                                disabled={isCustomer || !data?.claim?.open}
                             />
                         </div>
 
@@ -202,7 +211,7 @@ export default function EightDReportPage() {
                                 value={formData.correctiveActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
-                                disabled={isCustomer}
+                                disabled={isCustomer || !data?.claim?.open}
                             />
                             <span className='font-medium'>Deadline: </span>
                             <DatePicker
@@ -210,9 +219,9 @@ export default function EightDReportPage() {
                                 showIcon
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.correctiveActionDeadline}
-                                onChange={setCorrectiveDate} 
-                                disabled={isOpen || isCustomer}/>
-                                
+                                onChange={setCorrectiveDate}
+                                disabled={isOpen || isCustomer || !data?.claim?.open} />
+
                         </div>
 
                         {/* Verify Corrective Actions */}
@@ -226,7 +235,7 @@ export default function EightDReportPage() {
                                 value={formData.verifyCorrectiveActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
-                                disabled={isCustomer}
+                                disabled={isCustomer || !data?.claim?.open}
                             />
                             <span className='font-medium'>Deadline: </span>
                             <DatePicker
@@ -234,8 +243,8 @@ export default function EightDReportPage() {
                                 showIcon
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.verifyCorrectiveActionsDeadline}
-                                onChange={setVerifyCorrectiveDate} 
-                                disabled={isOpen || isCustomer}/>
+                                onChange={setVerifyCorrectiveDate}
+                                disabled={isOpen || isCustomer || !data?.claim?.open} />
                         </div>
 
                         {/* Preventive Actions */}
@@ -249,7 +258,7 @@ export default function EightDReportPage() {
                                 value={formData.preventiveActions}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
-                                disabled={isCustomer}
+                                disabled={isCustomer || !data?.claim?.open}
                             />
                             <span className='font-medium'>Deadline: </span>
                             <DatePicker
@@ -257,8 +266,8 @@ export default function EightDReportPage() {
                                 showIcon
                                 dateFormat="yyyy/MM/dd"
                                 selected={formData.preventiveActionDeadline}
-                                onChange={(setPreventiveDate)} 
-                                disabled={isOpen || isCustomer}/>
+                                onChange={(setPreventiveDate)}
+                                disabled={isOpen || isCustomer || !data?.claim?.open} />
                         </div>
 
                         {/* Team recognition */}
@@ -272,11 +281,11 @@ export default function EightDReportPage() {
                                 value={formData.teamRecognition}
                                 onChange={handleFormData}
                                 className="mt-1 p-2 border rounded-md w-full"
-                                disabled={isCustomer}
+                                disabled={isCustomer || !data?.claim?.open}
                             />
                         </div>
 
-                        {!isCustomer && <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                        {(!isCustomer && data?.claim?.open) && <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
                             Submit 8D Report
                         </button>}
                     </form>

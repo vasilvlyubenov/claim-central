@@ -285,6 +285,26 @@ export const claimApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        closeClaim: builder.mutation({
+            async queryFn(claimId: string | undefined) {
+
+                if (!claimId) {
+                    throw new Error('Something went wrong.');
+                }
+                try {
+                    const date = new Date();
+                    await updateDoc(doc(db, 'claims', claimId), {
+                        dateClosed: date,
+                        open: false,
+                    });
+
+                    return { data: 'Success' };
+                } catch (error) {
+                    console.error(error);
+                    return { error };
+                }
+            }
+        }),
     })
 });
 
@@ -297,4 +317,5 @@ export const {
     useCustomerClaimsQuery,
     useEditClaimMutation,
     useDeleteClaimMutation,
+    useCloseClaimMutation
 } = claimApi;
