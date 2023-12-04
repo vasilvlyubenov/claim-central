@@ -16,6 +16,7 @@ import EightDReportPage from 'components/EightDReport/EightDReport';
 import CustomerClaims from 'components/CustomerClaims/CustomerClaims';
 import EditClaim from 'components/EditClaim/EditClaim';
 import Dashboard from 'components/Dashboard/Dashboard';
+import PageNotFound from 'components/PageNotFound/PageNotFound';
 
 function App() {
 
@@ -47,6 +48,8 @@ function App() {
           <Route element={<AuthComponent allowedRole='supplier' />}>
             <Route path='/open-claims' element={<SupplierOpenClaims />} />
           </Route>
+
+          <Route path='*' element={<PageNotFound />} />
 
         </Routes>
       </div>
