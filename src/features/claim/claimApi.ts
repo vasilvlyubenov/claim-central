@@ -1,9 +1,10 @@
 import { firebaseApi } from '../../app/firebaseApi';
 import { storage, db, auth } from '../../config/firebase';
-import { DocumentData, addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { DocumentData, addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 
 import { OpenClaimSubmit } from '../../types/OpenClaimSubmit';
 import { TEditClaim } from '../../types/TEditClaim';
+import { DeleteClaim } from '../../types/DeleteClaim';
 import { EightDReport } from '../../types/EightDReport';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { calculateDeadline, generateFileName } from '../../utils/helpers';
@@ -143,20 +144,24 @@ export const claimApi = firebaseApi.injectEndpoints({
                     }
 
                     try {
-
                         const docRef = doc(db, 'reports', claimId);
                         const docSnap = await getDoc(docRef);
                         const data = docSnap.data();
 
+                        const convCorrActionDeadline = data?.correctiveActionDeadline ? new Date(data?.correctiveActionDeadline.seconds * 1000 + data?.correctiveActionDeadline.nanoseconds / 1000000) : null;
+                        const convVerifyDeadline = data?.verifyCorrectiveActionsDeadline ? new Date(data?.verifyCorrectiveActionsDeadline.seconds * 1000 + data?.verifyCorrectiveActionsDeadline.nanoseconds / 1000000) : null;
+                        const convPrevActionsDeadline = data?.preventiveActionDeadline ? new Date(data?.preventiveActionDeadline.seconds * 1000 + data?.preventiveActionDeadline.nanoseconds / 1000000) : null;
+
                         const result = {
                             ...data,
-                            correctiveActionDeadline: new Date(data?.correctiveActionDeadline.seconds * 1000 + data?.correctiveActionDeadline.nanoseconds / 1000000),
-                            verifyCorrectiveActionsDeadline: new Date(data?.verifyCorrectiveActionsDeadline.seconds * 1000 + data?.verifyCorrectiveActionsDeadline.nanoseconds / 1000000),
-                            preventiveActionDeadline: new Date(data?.preventiveActionDeadline.seconds * 1000 + data?.preventiveActionDeadline.nanoseconds / 1000000),
+                            correctiveActionDeadline: convCorrActionDeadline,
+                            verifyCorrectiveActionsDeadline: convVerifyDeadline,
+                            preventiveActionDeadline: convPrevActionsDeadline,
                         };
 
                         return { data: result };
                     } catch (error) {
+                        console.log(error);
                         return { error };
                     }
                 } catch (error) {
@@ -180,7 +185,7 @@ export const claimApi = firebaseApi.injectEndpoints({
                     };
 
                     const reportRef = doc(db, 'reports', args.ref);
-                    await updateDoc(reportRef, docData);
+                    await updateDoc(reportRef, { ...docData });
 
                     return { data: 'Success' };
                 } catch (error) {
@@ -263,6 +268,43 @@ export const claimApi = firebaseApi.injectEndpoints({
                 }
             }
         }),
+        deleteClaim: builder.mutation({
+            async queryFn(data: DeleteClaim) {
+                try {
+                    await deleteDoc(doc(db, 'claims', data.claimId));
+                    await deleteDoc(doc(db, 'reports', data.claimId));
+
+                    if (data.filePath !== '') {
+                        const fileRef = ref(storage, data.filePath);
+                        await deleteObject(fileRef);
+                    }
+
+                    return { data: 'Success' };
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
+        closeClaim: builder.mutation({
+            async queryFn(claimId: string | undefined) {
+
+                if (!claimId) {
+                    throw new Error('Something went wrong.');
+                }
+                try {
+                    const date = new Date();
+                    await updateDoc(doc(db, 'claims', claimId), {
+                        dateClosed: date,
+                        open: false,
+                    });
+
+                    return { data: 'Success' };
+                } catch (error) {
+                    console.error(error);
+                    return { error };
+                }
+            }
+        }),
     })
 });
 
@@ -273,5 +315,7 @@ export const {
     useGetReportByClaimIdQuery,
     useSaveReportMutation,
     useCustomerClaimsQuery,
-    useEditClaimMutation
+    useEditClaimMutation,
+    useDeleteClaimMutation,
+    useCloseClaimMutation
 } = claimApi;
