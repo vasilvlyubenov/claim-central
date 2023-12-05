@@ -1,30 +1,29 @@
-# React + TypeScript + Vite
+# Claim central
 
-## Live preview
-[claim-central](https://claim-central.vercel.app/)
+## Overview
+This is simple react-redux claim management app based on 8D methodology (The report in this app is simplified considering the purpose of the app).
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The app provide two types of registration - for customers and suppliers. Customers hold most of the functionallities which the app provides - openning claims, deleting claims, editing claims (excluding the 8D report) and closing claims. Suppliers can only fill the expected informaation in the report.
 
-Currently, two official plugins are available:
+## Live demo
+Hosted on Vercel [link](https://claim-central.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Installation
+Make sure you have Node.js isntalled
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+1. Clone the repo:
+```
+git clone https://github.com/vasilvlyubenov/claim-central.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Navigate to root folder:
+```
+cd claims-central
+```
+
+3. Install dependencies
+```
+npm install
+```
+
+App should run on [localhost](http://localhost:5173/)
