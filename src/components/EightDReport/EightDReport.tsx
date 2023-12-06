@@ -173,9 +173,9 @@ export default function EightDReportPage() {
                         {/* Containment Actions */}
                         <div>
                             <label className="block font-medium">Containment Actions</label>
-                            {(currentDate <= (new Date(data?.claim?.deadlines?.d3)))
+                            {data?.claim?.open && ((currentDate <= (new Date(data?.claim?.deadlines?.d3)))
                                 ? <span className='deadline'>Until: {data?.claim?.deadlines?.d3}</span>
-                                : <span className='deadline-late'>Late</span>}
+                                : <span className='deadline-late'>Late</span>)}
                             <textarea
                                 name='containmentActions'
                                 value={formData.containmentActions}
@@ -188,9 +188,9 @@ export default function EightDReportPage() {
                         {/* Root Cause Analysis */}
                         <div>
                             <label className="block font-medium">Root Cause Analysis</label>
-                            {(currentDate <= (new Date(data?.claim?.deadlines?.d4)))
+                            {data?.claim?.open && ((currentDate <= (new Date(data?.claim?.deadlines?.d4)))
                                 ? <span className='deadline'>Until: {data?.claim?.deadlines?.d4}</span>
-                                : <span className='deadline-late'>Late</span>}
+                                : <span className='deadline-late'>Late</span>)}
                             <textarea
                                 name='rootCauseAnalysis'
                                 value={formData.rootCauseAnalysis}
@@ -203,9 +203,9 @@ export default function EightDReportPage() {
                         {/* Corrective Actions */}
                         <div>
                             <label className="block font-medium">Corrective Actions</label>
-                            {(currentDate <= (new Date(data?.claim?.deadlines?.d5)))
+                            {data?.claim?.open && ((currentDate <= (new Date(data?.claim?.deadlines?.d5)))
                                 ? <span className='deadline'>Until: {data?.claim?.deadlines?.d5}</span>
-                                : <span className='deadline-late'>Late</span>}
+                                : <span className='deadline-late'>Late</span>)}
                             <textarea
                                 name='correctiveActions'
                                 value={formData.correctiveActions}
@@ -227,9 +227,9 @@ export default function EightDReportPage() {
                         {/* Verify Corrective Actions */}
                         <div>
                             <label className="block font-medium">Verify Corrective Actions</label>
-                            {(currentDate <= (new Date(data?.claim?.deadlines?.d6)))
+                            {data?.claim?.open && ((currentDate <= (new Date(data?.claim?.deadlines?.d6)))
                                 ? <span className='deadline'>Until: {data?.claim?.deadlines?.d6}</span>
-                                : <span className='deadline-late'>Late</span>}
+                                : <span className='deadline-late'>Late</span>)}
                             <textarea
                                 name='verifyCorrectiveActions'
                                 value={formData.verifyCorrectiveActions}
@@ -250,9 +250,9 @@ export default function EightDReportPage() {
                         {/* Preventive Actions */}
                         <div>
                             <label className="block font-medium">Preventive Actions</label>
-                            {(currentDate <= (new Date(data?.claim?.deadlines?.d7)))
+                            {data?.claim?.open && ((currentDate <= (new Date(data?.claim?.deadlines?.d7)))
                                 ? <span className='deadline'>Until: {data?.claim?.deadlines?.d7}</span>
-                                : <span className='deadline-late'>Late</span>}
+                                : <span className='deadline-late'>Late</span>)}
                             <textarea
                                 name='preventiveActions'
                                 value={formData.preventiveActions}
@@ -273,9 +273,9 @@ export default function EightDReportPage() {
                         {/* Team recognition */}
                         <div>
                             <label className="block font-medium">Team recognition</label>
-                            {(currentDate <= (new Date(data?.claim?.deadlines?.d4)))
+                            {data?.claim?.open && ((currentDate <= (new Date(data?.claim?.deadlines?.d4)))
                                 ? <span className='deadline'>Until: {data?.claim?.deadlines?.d4}</span>
-                                : <span className='deadline-late'>Late</span>}
+                                : <span className='deadline-late'>Late</span>)}
                             <textarea
                                 name='teamRecognition'
                                 value={formData.teamRecognition}
