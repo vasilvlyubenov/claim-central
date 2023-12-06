@@ -237,6 +237,7 @@ export const claimApi = firebaseApi.injectEndpoints({
             async queryFn(data: TEditClaim) {
                 try {
                     let filePath = '';
+                    let docData = {};
 
                     if (data.file !== null) {
                         const fileName = generateFileName(data.file[0].name);
@@ -246,11 +247,20 @@ export const claimApi = firebaseApi.injectEndpoints({
                         filePath = upload.metadata.fullPath;
                     }
 
-                    const docData = {
-                        subject: data.subject,
-                        issueDescription: data.issueDescription,
-                        filePath
-                    };
+                    if (filePath !== '') {
+                        docData = {
+                            subject: data.subject,
+                            issueDescription: data.issueDescription,
+                            filePath
+                        };
+                    } else {
+                        docData = {
+                            subject: data.subject,
+                            issueDescription: data.issueDescription,
+                        };
+                    }
+
+
 
                     await updateDoc(doc(db, 'claims', data.claimId), docData);
 
