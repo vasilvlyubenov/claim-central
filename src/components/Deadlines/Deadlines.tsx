@@ -31,6 +31,7 @@ export default function Deadlines(props: {
     return (
         <div className="mb-4 hidable">
             <h3>Deadlines</h3>
+            <p>(number of days from claim announcement <br/> for each phase)</p>
             <hr />
             <div className='deadlines'>
                 <div className='deadline-item'>
