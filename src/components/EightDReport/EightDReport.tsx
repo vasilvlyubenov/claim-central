@@ -34,17 +34,18 @@ export default function EightDReportPage() {
     const [isOpen, setIsOpen] = useState(false);
     const { claimId } = useParams();
     const navigate = useNavigate();
-    const { data, isLoading } = useGetClaimByIdQuery(claimId);
+    const { data, isLoading, refetch: claimRefetch } = useGetClaimByIdQuery(claimId);
     const { data: reportData, isLoading: isReporLoading, isSuccess: isReportDataSuccess, refetch } = useGetReportByClaimIdQuery(claimId);
     const [saveReport, { isLoading: isSaveReportLoading, isSuccess: isSaveReportSuccess }] = useSaveReportMutation();
     const [deleteClaim, { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess }] = useDeleteClaimMutation();
-    const [closeClaim, { isLoading: isCloseClaimLoading }] = useCloseClaimMutation();
+    const [closeClaim, { isLoading: isCloseClaimLoading, isSuccess: isCloseClaimSuccess }] = useCloseClaimMutation();
     const selector = useAppSelector(selector => selector.user);
     const currentDate = new Date();
 
     useEffect(() => {
         refetch();
-    }, [refetch]);
+        claimRefetch();
+    }, [refetch, claimRefetch]);
 
     useEffect(() => {
 
@@ -139,6 +140,11 @@ export default function EightDReportPage() {
 
     const handlecloseClaim = () => {
         closeClaim(claimId);
+
+        if (isCloseClaimSuccess) {
+            refetch();
+            claimRefetch();
+        }
         navigate('/customer-claims');
     };
 
