@@ -11,6 +11,7 @@ import { EightDReport } from '../../types/EightDReport';
 import { useCloseClaimMutation, useDeleteClaimMutation, useGetClaimByIdQuery, useGetReportByClaimIdQuery, useSaveReportMutation } from '../../features/claim/claimApi';
 import Spinner from 'components/common/Spinner/Spinner';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { convertFirebaseTimestamp } from '../../utils/helpers';
 
 const initialState: EightDReport = {
     descriptionId: '',
@@ -159,6 +160,7 @@ export default function EightDReportPage() {
                 : <div className="max-w-3xl mx-auto mt-8 report text-central">
                     <h1 className="text-3xl font-semibold mb-4">8D Report</h1>
                     <h2>Subject: {data?.claim?.subject}</h2>
+                    <h3 className='date-color'>Date open: {convertFirebaseTimestamp(data?.claim?.dateOpen.seconds, data?.claim?.dateOpen.nanoseconds).toISOString().split('T')[0]}</h3>
                     <form onSubmit={handleFormSubmit} className="space-y-4">
                         {/* Issue Description */}
                         <div>
@@ -170,6 +172,7 @@ export default function EightDReportPage() {
                                 readOnly
                             />
                         </div>
+                        {!data?.claim?.open && <h3 className='date-color'>Date closed: {convertFirebaseTimestamp(data?.claim?.dateClosed.seconds, data?.claim?.dateClosed.nanoseconds).toISOString().split('T')[0]}</h3>}
 
                         {data?.claim?.filePath && <button type="button" className="download-btn" onClick={handleDownload}>Download</button>}
                         {(isCustomer && data?.claim?.open) && <Link to={`/edit/${claimId}`} className='edit-link'>Edit</Link>}

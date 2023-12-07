@@ -88,3 +88,7 @@ button.close-btn {
 .report .close-btn:hover, .report .delete-btn:hover, .report .download-btn:hover, .report .edit-link:hover {
     background-color: #f5f4f4;
 }
+
+.report .date-color {
+    color: #000;
+}
