@@ -88,7 +88,7 @@ export const calculateDeadline = (numberOfDays: number, initial: number = 0) => 
     const currentDate = new Date();
 
     const dayOfWeek = currentDate.getDay();
-    
+
     if (initial === 1) {
         if (dayOfWeek === 5) {
             currentDate.setDate(currentDate.getDate() + 3);
@@ -105,4 +105,16 @@ export const calculateDeadline = (numberOfDays: number, initial: number = 0) => 
     const deadline = new Date(currentDate.getTime() + numberOfDays * 24 * 60 * 60 * 1000);
 
     return deadline.toISOString().split('T')[0];
+};
+
+
+/**
+ * Convert firebase timestamp to date
+ * @param seconds number
+ * @param nanoseconds number
+ * 
+ * @returns Date
+ */
+export const convertFirebaseTimestamp = (seconds: number, nanoseconds: number) => {
+    return new Date(seconds * 1000 + nanoseconds / 1000000);
 };

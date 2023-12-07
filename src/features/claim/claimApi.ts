@@ -7,7 +7,7 @@ import { TEditClaim } from '../../types/TEditClaim';
 import { DeleteClaim } from '../../types/DeleteClaim';
 import { EightDReport } from '../../types/EightDReport';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { calculateDeadline, generateFileName } from '../../utils/helpers';
+import { calculateDeadline, convertFirebaseTimestamp, generateFileName } from '../../utils/helpers';
 
 
 export const claimApi = firebaseApi.injectEndpoints({
@@ -98,7 +98,7 @@ export const claimApi = firebaseApi.injectEndpoints({
 
                         const converted = {
                             ...line,
-                            dateOpen: (new Date(line.dateOpen.seconds * 1000 + line.dateOpen.nanoseconds / 1000000)).toDateString(),
+                            dateOpen: convertFirebaseTimestamp(line.dateOpen.seconds, line.dateOpen.nanoseconds).toDateString(),
                             id: doc.id,
                             customerEmail: customers[line.customerId]
                         };
@@ -129,6 +129,8 @@ export const claimApi = firebaseApi.injectEndpoints({
                         download = getDownloadURL(ref(storage, data?.filePath));
                     }
 
+
+
                     return { data: { claim: data, download: download } };
                 } catch (error) {
                     return { error };
@@ -148,9 +150,9 @@ export const claimApi = firebaseApi.injectEndpoints({
                         const docSnap = await getDoc(docRef);
                         const data = docSnap.data();
 
-                        const convCorrActionDeadline = data?.correctiveActionDeadline ? new Date(data?.correctiveActionDeadline.seconds * 1000 + data?.correctiveActionDeadline.nanoseconds / 1000000) : null;
-                        const convVerifyDeadline = data?.verifyCorrectiveActionsDeadline ? new Date(data?.verifyCorrectiveActionsDeadline.seconds * 1000 + data?.verifyCorrectiveActionsDeadline.nanoseconds / 1000000) : null;
-                        const convPrevActionsDeadline = data?.preventiveActionDeadline ? new Date(data?.preventiveActionDeadline.seconds * 1000 + data?.preventiveActionDeadline.nanoseconds / 1000000) : null;
+                        const convCorrActionDeadline = data?.correctiveActionDeadline ? convertFirebaseTimestamp(data?.correctiveActionDeadline.seconds, data?.correctiveActionDeadline.nanoseconds) : null;
+                        const convVerifyDeadline = data?.verifyCorrectiveActionsDeadline ? convertFirebaseTimestamp(data?.verifyCorrectiveActionsDeadline.seconds, data?.verifyCorrectiveActionsDeadline.nanoseconds) : null;
+                        const convPrevActionsDeadline = data?.preventiveActionDeadline ? convertFirebaseTimestamp(data?.preventiveActionDeadline.seconds, data?.preventiveActionDeadline.nanoseconds) : null;
 
                         const result = {
                             ...data,
@@ -220,7 +222,7 @@ export const claimApi = firebaseApi.injectEndpoints({
 
                         const converted = {
                             ...line,
-                            dateOpen: (new Date(line.dateOpen.seconds * 1000 + line.dateOpen.nanoseconds / 1000000)).toDateString(),
+                            dateOpen: convertFirebaseTimestamp(line.dateOpen.seconds, line.dateOpen.nanoseconds).toDateString(),
                             id: doc.id,
                             supplierEmail: suppliers[line.supplierId]
                         };
