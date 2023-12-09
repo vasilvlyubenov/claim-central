@@ -61,6 +61,14 @@ export default function UserInfoPage() {
             [name]: value,
             deadlines: { ...userData.deadlines, [name]: value }
         });
+
+        if (name === 'userType') {
+            if (value === 'customer') {
+                setIsCustomer(true);
+            } else {
+                setIsCustomer(false);
+            }
+        }
     };
 
     const handleSubmit = (e: FormEvent) => {
